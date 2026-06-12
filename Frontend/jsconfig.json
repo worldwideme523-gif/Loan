@@ -4,11 +4,5 @@
     {
       "path": "./jsconfig.app.json"
     }
-   
-  ],
-  "compilerOptions": {
-     "paths": {
-      "@/*": ["./src/*"]
-    }
-  }
+  ]
 }
