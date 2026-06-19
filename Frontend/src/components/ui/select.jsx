@@ -1,5 +1,5 @@
 import * as React from "react"
-import { Select as SelectPrimitive } from "@radix-ui/react-select"
+import * as SelectPrimitive from "@radix-ui/react-select"
 import { cn } from "@/lib/utils"
 import { ChevronDown, Check } from "lucide-react"
 
