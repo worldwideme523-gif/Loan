@@ -4,6 +4,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import dns from 'dns';
 
 
 // Routes
@@ -17,6 +18,14 @@ import cryptoRoutes from './routes/crypto.js';
 import { errorHandler } from './middleware/errorHandler.js';
 
 dotenv.config();
+
+// Fix DNS resolution for environments where Node.js c-ares can't use system DNS
+try {
+  const servers = dns.getServers();
+  if (servers.length === 1 && servers[0] === '127.0.0.1') {
+    dns.setServers(['10.0.0.243', '8.8.8.8', '8.8.4.4']);
+  }
+} catch (_) {}
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
