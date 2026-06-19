@@ -8,7 +8,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Wallet, Send, Mail, CreditCard, Clock, LogOut } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Wallet, Send, Mail, CreditCard, Clock, LogOut, Banknote, TriangleAlert } from 'lucide-react';
 import LoanCalculator from '../../components/LoanCalculator';
 import CountdownTimer from '../../components/CountdownTimer';
 
@@ -20,7 +22,7 @@ const UserDashboard = () => {
   const [externalWallet, setExternalWallet] = useState('');
   const [message, setMessage] = useState({ type: '', text: '' });
   const [applyAmount, setApplyAmount] = useState('');
-  const [applyTerm, setApplyTerm] = useState(6);
+  const [applyTerm, setApplyTerm] = useState('6');
   const [repaymentAmount, setRepaymentAmount] = useState('');
   const [repaymentTx, setRepaymentTx] = useState('');
   const [contactSubject, setContactSubject] = useState('');
@@ -59,7 +61,7 @@ const UserDashboard = () => {
   const handleApplyLoan = async (e) => {
     e.preventDefault();
     try {
-      await axiosInstance.post('/api/loan/apply', { amount: applyAmount, termMonths: applyTerm, purpose: 'Investment' });
+      await axiosInstance.post('/api/loan/apply', { amount: applyAmount, termMonths: Number(applyTerm), purpose: 'Investment' });
       setMessage({ type: 'success', text: 'Loan application submitted!' });
       fetchApplications();
     } catch (err) {
@@ -116,20 +118,19 @@ const UserDashboard = () => {
   const repaymentAddress = '0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb9';
 
   return (
-    <div className="min-h-screen bg-gray-800">
-      {/* Header */}
-      <header className="bg-gray-800 border-b sticky top-0 z-10">
+    <div className="min-h-screen bg-background">
+      <header className="border-b bg-card sticky top-0 z-10">
         <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-white font-bold rounded-full flex items-center gap-2 justify-center shadow-md">
-                <span className="bg-white text-blue-600 font-bold text-3xl">S</span>
-              </div>
-              <div className="text-3xl font-bold text-white dark:text-white">Sedgwiick</div>
+          <div className="flex items-center gap-3">
+            <div className="size-10 bg-primary rounded-full flex items-center justify-center shadow-md">
+              <span className="text-primary-foreground font-bold text-xl">S</span>
             </div>
+            <span className="text-xl font-bold text-foreground">Sedgwiick</span>
+          </div>
           <div className="flex items-center gap-4">
-            <span className="text-white">Welcome, {user?.name}</span>
-            <Button variant="outline" onClick={logout}>
-              <LogOut className="mr-2 h-4 w-4 border text-white" /> Logout
+            <span className="text-sm text-muted-foreground">Welcome, {user?.name}</span>
+            <Button variant="outline" size="sm" onClick={logout}>
+              <LogOut className="mr-2 size-4" /> Logout
             </Button>
           </div>
         </div>
@@ -142,8 +143,7 @@ const UserDashboard = () => {
           </Alert>
         )}
 
-        {/* Wallet Balance Card */}
-        <Card className="mb-8 bg-gradient-to-r from-blue-500 to-blue-600 text-white border-0">
+        <Card className="mb-8 bg-gradient-to-r from-primary to-primary/80 text-primary-foreground border-0">
           <CardContent className="flex justify-between items-center p-6">
             <div>
               <p className="text-sm opacity-90">Available Balance</p>
@@ -161,7 +161,6 @@ const UserDashboard = () => {
             <TabsTrigger value="contact">Contact Admin</TabsTrigger>
           </TabsList>
 
-          {/* Overview Tab */}
           <TabsContent value="overview" className="space-y-6">
             {activeLoan && activeLoan.status === 'approved' && !activeLoan.withdrawnToWallet && (
               <Card>
@@ -169,15 +168,29 @@ const UserDashboard = () => {
                   <CardTitle>Active Loan</CardTitle>
                   <CardDescription>Your approved loan details</CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-2">
-                  <p><strong>Amount:</strong> ${activeLoan.approvedAmount?.toLocaleString()}</p>
-                  <p><strong>Term:</strong> {activeLoan.termMonths} months</p>
-                  <p><strong>Interest Rate:</strong> {activeLoan.interestRate * 100}%</p>
-                  <p><strong>Total to Repay:</strong> ${activeLoan.totalPayable?.toLocaleString()}</p>
+                <CardContent className="space-y-3">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-sm text-muted-foreground">Amount</p>
+                      <p className="text-lg font-semibold">${activeLoan.approvedAmount?.toLocaleString()}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Term</p>
+                      <p className="text-lg font-semibold">{activeLoan.termMonths} months</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Interest Rate</p>
+                      <p className="text-lg font-semibold">{activeLoan.interestRate * 100}%</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Total to Repay</p>
+                      <p className="text-lg font-semibold">${activeLoan.totalPayable?.toLocaleString()}</p>
+                    </div>
+                  </div>
                   <CountdownTimer targetDate={activeLoan.withdrawalAvailableDate} />
                   {new Date() >= new Date(activeLoan.withdrawalAvailableDate) && (
-                    <Button onClick={handleTransfer} className="w-full mt-4">
-                      <Send className="mr-2 h-4 w-4" /> Transfer to Wallet
+                    <Button onClick={handleTransfer} className="w-full mt-2">
+                      <Send className="mr-2 size-4" /> Transfer to Wallet
                     </Button>
                   )}
                 </CardContent>
@@ -186,6 +199,7 @@ const UserDashboard = () => {
 
             {applications.filter(a => a.status === 'pending').length > 0 && (
               <Alert>
+                <TriangleAlert className="size-4" />
                 <AlertDescription>
                   Your loan application is pending review. You will be notified when approved.
                 </AlertDescription>
@@ -207,7 +221,7 @@ const UserDashboard = () => {
                 <CardDescription>Set your external wallet address for withdrawals</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div>
+                <div className="grid gap-2">
                   <Label htmlFor="wallet">Wallet Address</Label>
                   <Input
                     id="wallet"
@@ -221,39 +235,38 @@ const UserDashboard = () => {
             </Card>
           </TabsContent>
 
-          {/* Apply for Loan Tab */}
           <TabsContent value="apply">
             <Card>
               <CardHeader>
                 <CardTitle>Apply for a Loan</CardTitle>
-                <CardDescription>Minimum $100,000 – Maximum $20,000,000</CardDescription>
+                <CardDescription>Minimum $100,000 &ndash; Maximum $20,000,000</CardDescription>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleApplyLoan} className="space-y-4">
-                  <div>
+                  <div className="grid gap-2">
                     <Label htmlFor="amount">Amount ($)</Label>
                     <Input
                       id="amount"
                       type="number"
                       value={applyAmount}
-                      onChange={(e) => setApplyAmount(Number(e.target.value))}
+                      onChange={(e) => setApplyAmount(e.target.value)}
                       min="100000"
                       max="20000000"
                       required
                     />
                   </div>
-                  <div>
+                  <div className="grid gap-2">
                     <Label htmlFor="term">Repayment Plan</Label>
-                    <select
-                      id="term"
-                      value={applyTerm}
-                      onChange={(e) => setApplyTerm(Number(e.target.value))}
-                      className="w-full p-2 border rounded-md"
-                    >
-                      <option value={6}>Short Term (6 months) – 7% interest</option>
-                      <option value={12}>Mid-Short Term (12 months) – 10% interest</option>
-                      <option value={24}>Long Term (24 months) – 15% interest</option>
-                    </select>
+                    <Select value={applyTerm} onValueChange={setApplyTerm}>
+                      <SelectTrigger id="term">
+                        <SelectValue placeholder="Select term" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="6">Short Term (6 months) &ndash; 7% interest</SelectItem>
+                        <SelectItem value="12">Mid-Short Term (12 months) &ndash; 10% interest</SelectItem>
+                        <SelectItem value="24">Long Term (24 months) &ndash; 15% interest</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                   <Button type="submit">Submit Application</Button>
                 </form>
@@ -261,7 +274,6 @@ const UserDashboard = () => {
             </Card>
           </TabsContent>
 
-          {/* Repayment Tab */}
           <TabsContent value="repay">
             <Card>
               <CardHeader>
@@ -269,11 +281,11 @@ const UserDashboard = () => {
                 <CardDescription>Send crypto to the address below and submit the transaction hash</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="bg-gray-100 p-4 rounded-md">
-                  <p className="font-medium mb-2">Repayment Crypto Address:</p>
-                  <code className="block bg-gray-800 text-green-400 p-2 rounded text-sm break-all">{repaymentAddress}</code>
+                <div className="rounded-lg bg-muted p-4">
+                  <p className="text-sm font-medium mb-2">Repayment Crypto Address:</p>
+                  <code className="block bg-background text-primary p-2 rounded text-sm break-all border">{repaymentAddress}</code>
                 </div>
-                <div>
+                <div className="grid gap-2">
                   <Label htmlFor="repayAmount">Amount Repaid ($)</Label>
                   <Input
                     id="repayAmount"
@@ -282,7 +294,7 @@ const UserDashboard = () => {
                     onChange={(e) => setRepaymentAmount(e.target.value)}
                   />
                 </div>
-                <div>
+                <div className="grid gap-2">
                   <Label htmlFor="txHash">Transaction Hash</Label>
                   <Input
                     id="txHash"
@@ -296,14 +308,13 @@ const UserDashboard = () => {
             </Card>
           </TabsContent>
 
-          {/* Contact Admin Tab */}
           <TabsContent value="contact">
             <Card>
               <CardHeader>
                 <CardTitle>Contact Support</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div>
+                <div className="grid gap-2">
                   <Label htmlFor="subject">Subject</Label>
                   <Input
                     id="subject"
@@ -311,7 +322,7 @@ const UserDashboard = () => {
                     onChange={(e) => setContactSubject(e.target.value)}
                   />
                 </div>
-                <div>
+                <div className="grid gap-2">
                   <Label htmlFor="msg">Message</Label>
                   <Textarea
                     id="msg"
@@ -321,7 +332,7 @@ const UserDashboard = () => {
                   />
                 </div>
                 <Button onClick={handleContact}>
-                  <Mail className="mr-2 h-4 w-4" /> Send Email
+                  <Mail className="mr-2 size-4" /> Send Email
                 </Button>
               </CardContent>
             </Card>
