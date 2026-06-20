@@ -177,7 +177,7 @@ const Home = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.7 }}
-            className="text-base sm:text-lg md:text-xl lg:text-2xl mt-4 sm:mt-6 mb-8 sm:mb-12 max-w-2xl sm:max-w-3xl drop-shadow-lg text-white/90 leading-relaxed"
+            className="text-base sm:text-lg md:text-xl lg:text-2xl mt-4 sm:mt-6 mb-10 sm:mb-16 max-w-2xl sm:max-w-3xl drop-shadow-lg text-white/90 leading-relaxed"
           >
             Secure loans from $100,000 to $100,000,000 with flexible repayment plans.
             Fast approval, transparent terms, dedicated support.
@@ -187,11 +187,11 @@ const Home = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.65, duration: 0.7 }}
-            className="flex flex-col sm:flex-row items-center gap-4 sm:gap-5"
+            className="flex flex-col sm:flex-row items-center gap-5 sm:gap-6"
           >
             <Link
               to="/register"
-              className="group relative inline-flex items-center gap-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-base sm:text-lg px-8 sm:px-10 py-3.5 sm:py-4 rounded-full font-semibold shadow-2xl hover:shadow-blue-500/30 transition-all duration-300 hover:scale-105 active:scale-100 overflow-hidden"
+              className="group relative inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-sm sm:text-base px-7 sm:px-8 py-3 sm:py-3.5 rounded-full font-semibold shadow-2xl hover:shadow-blue-500/30 transition-all duration-300 hover:scale-105 active:scale-100 overflow-hidden"
             >
               <span className="relative z-10">Apply for a Loan</span>
               <span className="relative z-10 group-hover:translate-x-1 transition-transform duration-200">→</span>
@@ -199,10 +199,10 @@ const Home = () => {
             </Link>
             <Link
               to="/login"
-              className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/25 text-white text-base sm:text-lg px-7 sm:px-9 py-3.5 sm:py-4 rounded-full font-medium transition-all duration-300 hover:scale-105 active:scale-100"
+              className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/25 text-white text-sm sm:text-base px-6 sm:px-7 py-3 sm:py-3.5 rounded-full font-medium transition-all duration-300 hover:scale-105 active:scale-100"
             >
               Sign In
-              <ChevronRight size={18} />
+              <ChevronRight size={16} />
             </Link>
           </motion.div>
 
