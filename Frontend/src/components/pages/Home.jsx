@@ -177,7 +177,7 @@ const Home = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.7 }}
-            className="text-base sm:text-lg md:text-xl lg:text-2xl mt-4 sm:mt-6 mb-10 sm:mb-16 max-w-2xl sm:max-w-3xl drop-shadow-lg text-white/90 leading-relaxed"
+            className="text-base sm:text-lg md:text-xl lg:text-2xl mt-4 sm:mt-6 mb-14 sm:mb-20 max-w-2xl sm:max-w-3xl drop-shadow-lg text-white/90 leading-relaxed"
           >
             Secure loans from $100,000 to $100,000,000 with flexible repayment plans.
             Fast approval, transparent terms, dedicated support.
