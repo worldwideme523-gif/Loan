@@ -206,21 +206,21 @@ const LoanCalculator = () => {
               </div>
 
               {/* Main result cards */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <div className="rounded-xl bg-gradient-to-br from-emerald-500/20 to-emerald-600/10 border border-emerald-500/20 p-4">
+              <div className="grid grid-cols-2 gap-3">
+                <div className="relative rounded-xl bg-gradient-to-br from-emerald-500/20 to-emerald-600/10 border border-emerald-500/20 p-4">
                   <p className="text-xs text-emerald-300/70 font-medium mb-1">Interest Rate</p>
                   <p className="text-xl font-bold text-emerald-300">{calculated.rate}%</p>
                   <Percent className="absolute bottom-3 right-3 size-8 text-emerald-500/10" />
                 </div>
-                <div className="rounded-xl bg-gradient-to-br from-amber-500/20 to-amber-600/10 border border-amber-500/20 p-4">
+                <div className="relative rounded-xl bg-gradient-to-br from-amber-500/20 to-amber-600/10 border border-amber-500/20 p-4">
                   <p className="text-xs text-amber-300/70 font-medium mb-1">Total Interest</p>
                   <p className="text-xl font-bold text-amber-300">{formatCurrency(calculated.interest)}</p>
                 </div>
-                <div className="rounded-xl bg-gradient-to-br from-blue-500/20 to-blue-600/10 border border-blue-500/20 p-4 sm:col-span-1 col-span-2">
+                <div className="relative rounded-xl bg-gradient-to-br from-blue-500/20 to-blue-600/10 border border-blue-500/20 p-4">
                   <p className="text-xs text-blue-300/70 font-medium mb-1">Total Repayment</p>
                   <p className="text-xl font-bold text-blue-300">{formatCurrency(calculated.totalRepayment)}</p>
                 </div>
-                <div className="rounded-xl bg-gradient-to-br from-violet-500/20 to-violet-600/10 border border-violet-500/20 p-4 sm:col-span-1 col-span-2">
+                <div className="relative rounded-xl bg-gradient-to-br from-violet-500/20 to-violet-600/10 border border-violet-500/20 p-4">
                   <p className="text-xs text-violet-300/70 font-medium mb-1">Monthly Payment</p>
                   <p className="text-xl font-bold text-violet-300">{formatCurrency(calculated.monthlyPayment)}</p>
                 </div>
