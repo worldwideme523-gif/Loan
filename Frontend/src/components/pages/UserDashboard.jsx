@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import axiosInstance from '../../config/axios';
 import { Button } from '@/components/ui/button';
@@ -20,6 +21,7 @@ import CountdownTimer from '../../components/CountdownTimer';
 
 const UserDashboard = () => {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const [activeLoan, setActiveLoan] = useState(null);
   const [applications, setApplications] = useState([]);
   const [repayments, setRepayments] = useState([]);
@@ -171,7 +173,7 @@ const UserDashboard = () => {
         role="User"
         activeTab={activeTab}
         onNavigate={setActiveTab}
-        onLogout={logout}
+        onLogout={() => { logout(); navigate('/'); }}
       />
       <SidebarInset className="text-left">
         <SiteHeader

@@ -1,17 +1,21 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { Home } from 'lucide-react';
+import { Home, Mail, Lock, Eye, EyeOff } from 'lucide-react';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError('');
     try {
       const user = await login(email, password);
       if (user.role === 'admin' || user.role === 'superadmin') {
@@ -20,78 +24,135 @@ const Login = () => {
         navigate('/dashboard');
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed');
+      setError(err.response?.data?.message || 'Invalid email or password');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-900 flex flex-col items-center justify-center p-20">
-      {/* Header with Logo and Home Button */}
-      <div className="absolute top-6 left-6 right-6 flex justify-between items-center">
-        <div className="text-3xl font-bold text-white flex items-center gap-2">
-          <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
-            <span className="text-blue-600 font-bold">V</span>
+    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-900 flex flex-col">
+      {/* Header */}
+      <header className="bg-white/10 backdrop-blur-md border-b border-white/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16 sm:h-20">
+            <Link to="/" className="flex items-center gap-3 group">
+              <div className="size-9 sm:size-10 bg-white rounded-full flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow">
+                <span className="text-blue-600 font-bold text-lg sm:text-xl">V</span>
+              </div>
+              <span className="text-xl sm:text-2xl font-bold text-white">Velaris</span>
+            </Link>
+            <Link
+              to="/"
+              className="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-3 sm:px-5 py-2 rounded-xl transition-all duration-200 text-sm sm:text-base font-medium backdrop-blur-sm border border-white/10"
+            >
+              <Home className="size-4" />
+              <span className="hidden sm:inline">Back to</span> Home
+            </Link>
           </div>
-          Velaris
         </div>
-        <Link
-          to="/"
-          className="flex items-center gap-2 bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-gray-100 transition font-semibold"
-        >
-          <Home size={20} />
-          Home
-        </Link>
-      </div>
+      </header>
 
-      {/* Login Card */}
-      <div className="bg-blue-700 p-8 rounded-lg shadow-lg w-full max-w-md mt-16">
-        <h2 className="text-3xl font-bold text-gray-800 text-center mb-2">Welcome Back</h2>
-        <p className="text-center text-white mb-6">Login to your account</p>
-        
-        {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
-            {error}
+      {/* Main Content */}
+      <main className="flex-1 flex items-center justify-center px-4 sm:px-6 py-8 sm:py-12">
+        <div className="w-full max-w-md">
+          {/* Card */}
+          <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl p-6 sm:p-8 md:p-10">
+            {/* Brand */}
+            <div className="text-center mb-8">
+              <div className="size-16 sm:size-20 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg rotate-3 hover:rotate-0 transition-transform duration-300">
+                <span className="text-white font-bold text-2xl sm:text-3xl">V</span>
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Welcome Back</h1>
+              <p className="text-gray-500 mt-1.5 text-sm sm:text-base">Sign in to your Velaris account</p>
+            </div>
+
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl mb-6 text-sm flex items-center gap-2">
+                <div className="size-2 bg-red-500 rounded-full shrink-0" />
+                {error}
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Email Address</label>
+                <div className="relative">
+                  <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 sm:size-5 text-gray-400" />
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full pl-10 sm:pl-11 pr-4 py-2.5 sm:py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm sm:text-base text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                    placeholder="you@example.com"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Password</label>
+                <div className="relative">
+                  <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 sm:size-5 text-gray-400" />
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full pl-10 sm:pl-11 pr-11 sm:pr-12 py-2.5 sm:py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm sm:text-base text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                    placeholder="••••••••"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                  >
+                    {showPassword ? <EyeOff className="size-4 sm:size-5" /> : <Eye className="size-4 sm:size-5" />}
+                  </button>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-semibold py-2.5 sm:py-3 rounded-xl hover:from-blue-700 hover:to-indigo-800 transition-all duration-200 text-sm sm:text-base shadow-md hover:shadow-lg disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                {loading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <div className="size-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    Signing in...
+                  </span>
+                ) : (
+                  'Sign In'
+                )}
+              </button>
+            </form>
+
+            <div className="mt-6 text-center">
+              <p className="text-gray-500 text-sm sm:text-base">
+                Don&apos;t have an account?{' '}
+                <Link to="/register" className="text-blue-600 hover:text-blue-700 font-semibold hover:underline transition-all">
+                  Create one
+                </Link>
+              </p>
+            </div>
           </div>
-        )}
-        
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="block text-white font-semibold mb-2">Email Address</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 transition"
-              placeholder="you@example.com"
-              required
-            />
+        </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-white/5 backdrop-blur-sm border-t border-white/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-left">
+            <p className="text-white/60 text-xs sm:text-sm">
+              &copy; 2026 Velaris. All rights reserved.
+            </p>
+            <p className="text-white/40 text-xs">
+              Secure &bull; Transparent &bull; Fast
+            </p>
           </div>
-          <div className="mb-6">
-            <label className="block text-white font-semibold mb-2">Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 transition"
-              placeholder="••••••••"
-              required
-            />
-          </div>
-          <button
-            type="submit"
-            className="w-full bg-blue-800 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition"
-          >
-            Sign In
-          </button>
-        </form>
-        
-        <p className="text-center mt-6 text-white">
-          Don't have an account?{' '}
-          <Link to="/register" className="text-white font-semibold hover:underline">
-            Sign up
-          </Link>
-        </p>
-      </div>
+        </div>
+      </footer>
     </div>
   );
 };

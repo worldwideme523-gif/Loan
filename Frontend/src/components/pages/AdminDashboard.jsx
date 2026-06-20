@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import axiosInstance from '../../config/axios';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -19,6 +20,7 @@ import { Users, FileText, DollarSign, CheckCircle, XCircle, Plus, Trash2, UserCo
 
 const AdminDashboard = () => {
   const { user, logout, isSuperAdmin } = useAuth();
+  const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [applications, setApplications] = useState([]);
   const [repayments, setRepayments] = useState([]);
@@ -217,7 +219,7 @@ const AdminDashboard = () => {
         role={user?.role || 'Admin'}
         activeTab={selectedTab}
         onNavigate={setSelectedTab}
-        onLogout={logout}
+        onLogout={() => { logout(); navigate('/'); }}
       />
       <SidebarInset className="text-left">
         <SiteHeader
