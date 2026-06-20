@@ -294,8 +294,8 @@ const Home = () => {
               <Calculator className="size-4" />
               Loan Calculator
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">Plan Your Loan</h2>
-            <p className="text-lg text-blue-200/60 max-w-2xl mx-auto">
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">Plan Your Loan</h2>
+            <p className="text-lg text-blue-100/80 max-w-2xl mx-auto leading-relaxed">
               See exactly what you'll pay with our transparent calculator. No hidden fees, no surprises.
             </p>
           </motion.div>
