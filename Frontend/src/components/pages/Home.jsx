@@ -288,18 +288,18 @@ const Home = () => {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-500/5 rounded-full blur-3xl" />
         <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-500/20 to-transparent" />
 
-        <div className="container mx-auto px-6 relative">
-          <motion.div variants={fadeInUp} className="text-center mb-12">
+        <div className="container mx-auto px-6 relative flex flex-col items-center">
+          <motion.div variants={fadeInUp} className="text-center mb-12 w-full max-w-2xl">
             <div className="inline-flex items-center gap-2 bg-blue-500/10 text-blue-300 px-4 py-1.5 rounded-full text-sm font-medium mb-4 border border-blue-400/20">
               <Calculator className="size-4" />
               Loan Calculator
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">Plan Your Loan</h2>
-            <p className="text-lg text-blue-100/80 max-w-2xl mx-auto leading-relaxed">
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight text-center">Plan Your Loan</h2>
+            <p className="text-lg text-blue-100/80 max-w-xl mx-auto leading-relaxed text-center">
               See exactly what you'll pay with our transparent calculator. No hidden fees, no surprises.
             </p>
           </motion.div>
-          <motion.div variants={fadeInUp} className="max-w-2xl mx-auto">
+          <motion.div variants={fadeInUp} className="w-full max-w-2xl">
             <LoanCalculator />
           </motion.div>
         </div>
