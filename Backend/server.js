@@ -14,7 +14,6 @@ import adminRoutes from './routes/admin.js';
 import loanRoutes from './routes/loan.js';
 import repaymentRoutes from './routes/repayment.js';
 import testimonialRoutes from './routes/testimonial.js';
-import cryptoRoutes from './routes/crypto.js';
 import { errorHandler } from './middleware/errorHandler.js';
 
 dotenv.config();
@@ -53,7 +52,7 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/loan', loanRoutes);
 app.use('/api/repayment', repaymentRoutes);
 app.use('/api/testimonials', testimonialRoutes);
-app.use('/api/crypto', cryptoRoutes);
+
 
 
 

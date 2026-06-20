@@ -31,7 +31,7 @@ const TestimonialForm = ({ onSuccess }) => {
   };
 
   return (
-    <div className="mt-8 p-6 bg-white dark:bg-gray-800 rounded-lg shadow">
+    <div className="mt-8 p-6 bg-white rounded-lg shadow">
       <h3 className="text-xl font-bold mb-4">Share Your Experience</h3>
       {message && <div className="mb-4 p-2 rounded bg-gray-100">{message}</div>}
       <form onSubmit={handleSubmit} className="space-y-4">

@@ -64,14 +64,14 @@ export const approveLoan = async (req, res, next) => {
       await sendEmail({
         to: user.email,
         subject: 'Loan Application Approved',
-        text: `Dear ${user.name},\n\nYour loan application for ₦${application.amount.toLocaleString()} has been approved!\n\nFunds have been added to your wallet. They will be available for withdrawal after 90 days.\n\nThank you for choosing our platform.`
+        text: `Dear ${user.name},\n\nYour loan application for ₦${application.amount.toLocaleString()} has been approved!\n\nFunds have been added to your account. They will be available after the standard processing period.\n\nThank you for choosing our platform.`
       });
     } catch (emailError) {
       console.error('Email sending failed, but loan approved:', emailError.message);
       // Continue – the approval is already successful
     }
 
-    res.json({ message: 'Loan approved and wallet credited successfully', loan });
+    res.json({ message: 'Loan approved and account credited successfully', loan });
   } catch (error) {
     console.error('Approve loan error:', error);
     next(error);
@@ -125,7 +125,7 @@ export const addFunds = async (req, res, next) => {
     await user.save();
 
     res.json({
-      message: `Added ₦${amount} to ${user.name}'s wallet`,
+      message: `Added ₦${amount} to ${user.name}'s account`,
       newBalance: user.walletBalance
     });
   } catch (error) {

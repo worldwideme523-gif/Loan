@@ -3,15 +3,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { ArrowUpRight, ArrowDownLeft, Banknote, CheckCircle2, Clock, XCircle, Wallet, Send, FileText, RefreshCw } from 'lucide-react'
+import { CheckCircle2, Clock, XCircle, Wallet, FileText, RefreshCw, ArrowUpRight } from 'lucide-react'
 
 const typeConfig = {
-  loan_approved: { icon: CheckCircle2, label: 'Loan Approved', color: 'text-emerald-600', bg: 'bg-emerald-50 dark:bg-emerald-950/30' },
-  repayment: { icon: ArrowUpRight, label: 'Repayment', color: 'text-blue-600', bg: 'bg-blue-50 dark:bg-blue-950/30' },
-  repayment_received: { icon: CheckCircle2, label: 'Repayment Received', color: 'text-emerald-600', bg: 'bg-emerald-50 dark:bg-emerald-950/30' },
-  wallet_transfer: { icon: Send, label: 'Wallet Withdrawal', color: 'text-amber-600', bg: 'bg-amber-50 dark:bg-amber-950/30' },
-  funds_added: { icon: Wallet, label: 'Funds Added', color: 'text-purple-600', bg: 'bg-purple-50 dark:bg-purple-950/30' },
-  loan_applied: { icon: FileText, label: 'Loan Application', color: 'text-orange-600', bg: 'bg-orange-50 dark:bg-orange-950/30' },
+  loan_approved: { icon: CheckCircle2, label: 'Loan Approved', color: 'text-emerald-600', bg: 'bg-emerald-50' },
+  repayment: { icon: ArrowUpRight, label: 'Repayment', color: 'text-blue-600', bg: 'bg-blue-50' },
+  repayment_received: { icon: CheckCircle2, label: 'Repayment Received', color: 'text-emerald-600', bg: 'bg-emerald-50' },
+  funds_added: { icon: Wallet, label: 'Funds Added', color: 'text-violet-600', bg: 'bg-violet-50' },
+  loan_applied: { icon: FileText, label: 'Loan Application', color: 'text-amber-600', bg: 'bg-amber-50' },
 }
 
 function buildTransactions({ applications, repayments, activeLoan, user }) {
@@ -39,17 +38,6 @@ function buildTransactions({ applications, repayments, activeLoan, user }) {
     }
   })
 
-  if (activeLoan && activeLoan.withdrawnToWallet) {
-    txs.push({
-      id: `transfer-${activeLoan._id}`,
-      date: activeLoan.updatedAt || activeLoan.approvalDate,
-      type: 'wallet_transfer',
-      amount: activeLoan.approvedAmount,
-      status: 'completed',
-      description: `Withdrew $${activeLoan.approvedAmount?.toLocaleString()} to wallet`,
-    })
-  }
-
   repayments?.forEach(r => {
     txs.push({
       id: `repay-${r._id}`,
@@ -60,9 +48,6 @@ function buildTransactions({ applications, repayments, activeLoan, user }) {
       description: `Repayment of $${r.amount?.toLocaleString()}${r.status === 'received' ? ' received' : ' pending verification'}`,
     })
   })
-
-  if (user?.walletBalance > 0 && !txs.some(t => t.type === 'funds_added')) {
-  }
 
   return txs.sort((a, b) => new Date(b.date) - new Date(a.date))
 }

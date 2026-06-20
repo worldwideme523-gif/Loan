@@ -15,31 +15,11 @@
   --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
   --mono: ui-monospace, Consolas, monospace;
 
-  color-scheme: light dark;
+  color-scheme: light;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
 }
 
 body {
@@ -136,29 +116,4 @@ body {
   animation: fadeIn 0.8s ease-out;
 }
 
-/* Manual dark mode override */
-.dark {
-  --text: #cbd5e1;
-  --text-h: #f1f5f9;
-  --bg: #0f172a;
-  --bg-alt: #1e293b;
-  --border: #334155;
-  --code-bg: #1e293b;
-}
 
-.dark body {
-  background-color: #0f172a;
-}
-
-.dark .bg-white {
-  background-color: #1e293b !important;
-}
-
-.dark .text-gray-600,
-.dark .text-gray-500 {
-  color: #94a3b8 !important;
-}
-
-.dark .border-gray-100 {
-  border-color: #334155 !important;
-}

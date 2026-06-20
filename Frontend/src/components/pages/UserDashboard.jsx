@@ -11,12 +11,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/app-sidebar';
 import { SiteHeader } from '@/components/site-header';
-import { SectionCards } from '@/components/section-cards';
 import { TransactionHistory } from '@/components/transaction-history';
-import { ChartArea } from '@/components/chart-area';
-import { ChartBar, ChartBarGroup } from '@/components/chart-bar';
+import { ChartBarGroup } from '@/components/chart-bar';
 import { ChartDonut } from '@/components/chart-pie';
-import { Wallet, Send, Mail, TriangleAlert, LayoutDashboard, HandCoins, ArrowLeftRight, MessageSquareText, Clock, FileCheck, Banknote, TrendingUp, PieChart, Activity } from 'lucide-react';
+import { Wallet, Mail, TriangleAlert, LayoutDashboard, HandCoins, ArrowLeftRight, MessageSquareText, FileCheck, Banknote, TrendingUp, PieChart } from 'lucide-react';
 import LoanCalculator from '../../components/LoanCalculator';
 import CountdownTimer from '../../components/CountdownTimer';
 
@@ -25,31 +23,19 @@ const UserDashboard = () => {
   const [activeLoan, setActiveLoan] = useState(null);
   const [applications, setApplications] = useState([]);
   const [repayments, setRepayments] = useState([]);
-  const [externalWallet, setExternalWallet] = useState('');
   const [message, setMessage] = useState({ type: '', text: '' });
   const [applyAmount, setApplyAmount] = useState('');
   const [applyTerm, setApplyTerm] = useState('6');
   const [repaymentAmount, setRepaymentAmount] = useState('');
-  const [repaymentTx, setRepaymentTx] = useState('');
   const [contactSubject, setContactSubject] = useState('');
   const [contactMessage, setContactMessage] = useState('');
   const [activeTab, setActiveTab] = useState('overview');
 
   useEffect(() => {
-    fetchDashboardData();
     fetchApplications();
     fetchActiveLoan();
     fetchRepaymentRequests();
   }, []);
-
-  const fetchDashboardData = async () => {
-    try {
-      const res = await axiosInstance.get('/api/user/dashboard');
-      setExternalWallet(res.data.user.externalWalletAddress || '');
-    } catch (err) {
-      console.error(err);
-    }
-  };
 
   const fetchApplications = async () => {
     try {
@@ -83,36 +69,15 @@ const UserDashboard = () => {
     }
   };
 
-  const handleUpdateWallet = async () => {
-    try {
-      await axiosInstance.put('/api/user/wallet-address', { externalWalletAddress: externalWallet });
-      setMessage({ type: 'success', text: 'Wallet address updated!' });
-    } catch (err) {
-      setMessage({ type: 'error', text: 'Update failed' });
-    }
-  };
-
-  const handleTransfer = async () => {
-    try {
-      const res = await axiosInstance.post('/api/user/transfer-to-wallet');
-      setMessage({ type: 'success', text: res.data.message });
-      fetchDashboardData();
-    } catch (err) {
-      setMessage({ type: 'error', text: err.response?.data?.message });
-    }
-  };
-
   const handleRepayment = async () => {
     if (!activeLoan) return;
     try {
       await axiosInstance.post('/api/repayment/request', {
         loanId: activeLoan._id,
         amount: repaymentAmount,
-        transactionHash: repaymentTx
       });
       setMessage({ type: 'success', text: 'Repayment request submitted. Admin will verify.' });
       setRepaymentAmount('');
-      setRepaymentTx('');
       fetchRepaymentRequests();
     } catch (err) {
       setMessage({ type: 'error', text: err.response?.data?.message });
@@ -130,7 +95,6 @@ const UserDashboard = () => {
     }
   };
 
-  const repaymentAddress = '0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb9';
   const pendingApps = applications.filter(a => a.status === 'pending').length;
   const approvedApps = applications.filter(a => a.status === 'approved').length;
   const totalRepaid = repayments.filter(r => r.status === 'received').reduce((s, r) => s + r.amount, 0);
@@ -195,14 +159,9 @@ const UserDashboard = () => {
   }, [activeLoan, totalRepaid, totalRepaymentPending])
 
   const barChartConfig = {
-    applications: { label: 'Applications', color: 'hsl(var(--primary))' },
-    repayments: { label: 'Repayments', color: 'hsl(var(--chart-2))' },
+    applications: { label: 'Applications', color: '#3b82f6' },
+    repayments: { label: 'Repayments', color: '#10b981' },
   }
-
-  const gradientCards = [
-    { title: 'Total Balance', value: `$${user?.walletBalance?.toLocaleString() || 0}`, gradient: 'from-emerald-600 to-emerald-400', icon: Wallet },
-    { title: 'Total Spent', value: `$${totalRepaid.toLocaleString()}`, gradient: 'from-blue-600 to-blue-400', icon: TrendingUp },
-  ]
 
   return (
     <SidebarProvider defaultOpen={true}>
@@ -245,46 +204,43 @@ const UserDashboard = () => {
                 ))}
               </div>
 
-              {activeLoan && activeLoan.status === 'approved' && !activeLoan.withdrawnToWallet && (
+              {activeLoan && activeLoan.status === 'approved' && (
                 <Card className="shadow-sm border-0 ring-1 ring-foreground/5 overflow-hidden">
-                  <div className="h-1 bg-gradient-to-r from-primary via-purple-500 to-pink-500" />
+                  <div className="h-1 bg-gradient-to-r from-violet-500 to-purple-600" />
                   <CardHeader className="p-4 md:p-6">
                     <CardTitle className="text-lg md:text-xl">Active Loan</CardTitle>
                     <CardDescription className="text-sm">Your approved loan details</CardDescription>
                   </CardHeader>
                   <CardContent className="p-4 md:p-6 pt-0 md:pt-0 space-y-4">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                      <div className="rounded-lg bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-950/30 dark:to-emerald-950/20 p-3">
-                        <p className="text-xs text-emerald-700 dark:text-emerald-400 font-medium">Amount</p>
-                        <p className="text-lg font-bold text-emerald-800 dark:text-emerald-300">${activeLoan.approvedAmount?.toLocaleString()}</p>
+                      <div className="rounded-lg bg-gradient-to-br from-emerald-50 to-emerald-100 p-3">
+                        <p className="text-xs text-emerald-700 font-medium">Amount</p>
+                        <p className="text-lg font-bold text-emerald-800">${activeLoan.approvedAmount?.toLocaleString()}</p>
                       </div>
-                      <div className="rounded-lg bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950/30 dark:to-blue-950/20 p-3">
-                        <p className="text-xs text-blue-700 dark:text-blue-400 font-medium">Term</p>
-                        <p className="text-lg font-bold text-blue-800 dark:text-blue-300">{activeLoan.termMonths} months</p>
+                      <div className="rounded-lg bg-gradient-to-br from-blue-50 to-blue-100 p-3">
+                        <p className="text-xs text-blue-700 font-medium">Term</p>
+                        <p className="text-lg font-bold text-blue-800">{activeLoan.termMonths} months</p>
                       </div>
-                      <div className="rounded-lg bg-gradient-to-br from-violet-50 to-violet-100 dark:from-violet-950/30 dark:to-violet-950/20 p-3">
-                        <p className="text-xs text-violet-700 dark:text-violet-400 font-medium">Interest Rate</p>
-                        <p className="text-lg font-bold text-violet-800 dark:text-violet-300">{activeLoan.interestRate * 100}%</p>
+                      <div className="rounded-lg bg-gradient-to-br from-violet-50 to-violet-100 p-3">
+                        <p className="text-xs text-violet-700 font-medium">Interest Rate</p>
+                        <p className="text-lg font-bold text-violet-800">{activeLoan.interestRate * 100}%</p>
                       </div>
-                      <div className="rounded-lg bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-950/30 dark:to-amber-950/20 p-3">
-                        <p className="text-xs text-amber-700 dark:text-amber-400 font-medium">Total to Repay</p>
-                        <p className="text-lg font-bold text-amber-800 dark:text-amber-300">${activeLoan.totalPayable?.toLocaleString()}</p>
+                      <div className="rounded-lg bg-gradient-to-br from-amber-50 to-amber-100 p-3">
+                        <p className="text-xs text-amber-700 font-medium">Total to Repay</p>
+                        <p className="text-lg font-bold text-amber-800">${activeLoan.totalPayable?.toLocaleString()}</p>
                       </div>
                     </div>
-                    <CountdownTimer targetDate={activeLoan.withdrawalAvailableDate} />
-                    {new Date() >= new Date(activeLoan.withdrawalAvailableDate) && (
-                      <Button onClick={handleTransfer} className="w-full bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-700 text-white border-0">
-                        <Send className="mr-2 size-4" /> Transfer to Wallet
-                      </Button>
+                    {activeLoan.withdrawalAvailableDate && (
+                      <CountdownTimer targetDate={activeLoan.withdrawalAvailableDate} />
                     )}
                   </CardContent>
                 </Card>
               )}
 
               {pendingApps > 0 && (
-                <Alert className="border-amber-200 bg-amber-50 dark:bg-amber-950/20 dark:border-amber-800">
+                <Alert className="border-amber-200 bg-amber-50">
                   <TriangleAlert className="size-4 text-amber-600" />
-                  <AlertDescription className="text-amber-800 dark:text-amber-300">
+                  <AlertDescription className="text-amber-800">
                     Your loan application is pending review. You will be notified when approved.
                   </AlertDescription>
                 </Alert>
@@ -305,7 +261,7 @@ const UserDashboard = () => {
                     data={portfolioData}
                     nameKey="name"
                     valueKey="value"
-                    colors={["hsl(var(--primary))", "hsl(var(--chart-2))", "hsl(var(--chart-3))"]}
+                    colors={["#8b5cf6", "#10b981", "#f59e0b"]}
                     height={280}
                   />
                 ) : (
@@ -337,21 +293,6 @@ const UserDashboard = () => {
                   </CardHeader>
                   <CardContent className="p-4 md:p-6 pt-0 md:pt-0">
                     <LoanCalculator />
-                  </CardContent>
-                </Card>
-
-                <Card className="shadow-sm border-0 ring-1 ring-foreground/5">
-                  <div className="h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500" />
-                  <CardHeader className="p-4 md:p-6">
-                    <CardTitle className="text-lg md:text-xl">Wallet Settings</CardTitle>
-                    <CardDescription className="text-sm">Set your external crypto address for withdrawals</CardDescription>
-                  </CardHeader>
-                  <CardContent className="p-4 md:p-6 pt-0 md:pt-0 space-y-4">
-                    <div className="grid gap-2">
-                      <Label htmlFor="wallet">External Wallet Address</Label>
-                      <Input id="wallet" value={externalWallet} onChange={(e) => setExternalWallet(e.target.value)} placeholder="0x..." />
-                    </div>
-                    <Button onClick={handleUpdateWallet} className="bg-gradient-to-r from-primary to-indigo-600 hover:from-primary/90 hover:to-indigo-700 text-white border-0">Update Wallet</Button>
                   </CardContent>
                 </Card>
               </div>
@@ -393,20 +334,12 @@ const UserDashboard = () => {
               <div className="h-1 bg-gradient-to-r from-blue-500 to-cyan-500" />
               <CardHeader className="p-4 md:p-6">
                 <CardTitle className="text-lg md:text-xl">Make a Repayment</CardTitle>
-                <CardDescription className="text-sm">Send crypto to the address below and submit the transaction hash</CardDescription>
+                <CardDescription className="text-sm">Submit your repayment for admin verification</CardDescription>
               </CardHeader>
               <CardContent className="p-4 md:p-6 pt-0 md:pt-0 space-y-4">
-                <div className="rounded-lg bg-gradient-to-br from-muted to-muted/50 p-3 md:p-4 border">
-                  <p className="text-xs md:text-sm font-medium mb-2 text-muted-foreground">Repayment Crypto Address:</p>
-                  <code className="block bg-background text-primary p-2 md:p-3 rounded text-xs md:text-sm break-all border font-mono">{repaymentAddress}</code>
-                </div>
                 <div className="grid gap-2">
                   <Label htmlFor="repayAmount">Amount Repaid ($)</Label>
                   <Input id="repayAmount" type="number" value={repaymentAmount} onChange={(e) => setRepaymentAmount(e.target.value)} />
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="txHash">Transaction Hash</Label>
-                  <Input id="txHash" value={repaymentTx} onChange={(e) => setRepaymentTx(e.target.value)} placeholder="0x..." />
                 </div>
                 <Button onClick={handleRepayment} className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white border-0">Submit Repayment Request</Button>
               </CardContent>

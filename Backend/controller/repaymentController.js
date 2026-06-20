@@ -5,7 +5,7 @@ import Loan from '../models/Loan.js';
 // @route   POST /api/repayment/request
 export const createRepaymentRequest = async (req, res, next) => {
   try {
-    const { loanId, amount, transactionHash } = req.body;
+    const { loanId, amount } = req.body;
 
     const loan = await Loan.findById(loanId);
     if (!loan) {
@@ -22,8 +22,7 @@ export const createRepaymentRequest = async (req, res, next) => {
     const request = new RepaymentRequest({
       userId: req.user._id,
       loanId,
-      amount,
-      transactionHash
+      amount
     });
 
     await request.save();

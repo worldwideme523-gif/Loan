@@ -43,10 +43,6 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
-  externalWalletAddress: {
-    type: String,
-    default: ''
-  },
   createdAt: {
     type: Date,
     default: Date.now

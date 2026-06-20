@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion, useInView } from "framer-motion";
 import LoanCalculator from "../LoanCalculator";
-import { DollarSign, Clock, Shield, Users, ChevronLeft, ChevronRight, Sun, Moon } from "lucide-react";
+import { DollarSign, Clock, Shield, Users, ChevronLeft, ChevronRight } from "lucide-react";
 import axiosInstance from "../../config/axios";
 import { useAuth } from '../../contexts/AuthContext';
 import TestimonialForm from '../../components/TestimonialForm';
@@ -27,13 +27,8 @@ const staggerContainer = {
 const Home = () => {
   const { user } = useAuth();
   const [testimonials, setTestimonials] = useState([]);
-  const [cryptoPrices, setCryptoPrices] = useState({});
-  const [loadingTestimonials, setLoadingTestimonials] = useState(true); // ✅ declared
+  const [loadingTestimonials, setLoadingTestimonials] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [darkMode, setDarkMode] = useState(() => {
-    const saved = localStorage.getItem("theme");
-    return saved === "dark" || (!saved && window.matchMedia("(prefers-color-scheme: dark)").matches);
-  });
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   const refreshTestimonials = () => {
@@ -42,18 +37,6 @@ const Home = () => {
   useEffect(() => {
   fetchTestimonials();
 }, [refreshTrigger]);
-
-
-  // Apply theme
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add("dark");
-      localStorage.setItem("theme", "dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-      localStorage.setItem("theme", "light");
-    }
-  }, [darkMode]);
 
   // Auto carousel
   useEffect(() => {
@@ -72,7 +55,6 @@ const Home = () => {
     setLoadingTestimonials(true);
     try {
       const response = await axiosInstance.get('/api/testimonials');
-      // Backend returns a plain array
       setTestimonials(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error('Error fetching testimonials:', error);
@@ -81,20 +63,6 @@ const Home = () => {
       setLoadingTestimonials(false);
     }
   };
-
-  const fetchCryptoPrices = async () => {
-    try {
-      const response = await axiosInstance.get("/api/crypto/prices");
-      setCryptoPrices(response.data || {});
-    } catch (error) {
-      console.error("Error fetching crypto prices:", error);
-      setCryptoPrices({});
-    }
-  };
-
-  useEffect(() => {
-    fetchCryptoPrices();
-  }, []);
 
   const handlePrev = () => {
     setCurrentImageIndex((prev) => (prev === 0 ? carouselImages.length - 1 : prev - 1));
@@ -107,28 +75,26 @@ const Home = () => {
   // Scroll animations refs
   const featuresRef = useRef(null);
   const calculatorRef = useRef(null);
-  const cryptoRef = useRef(null);
   const testimonialsRef = useRef(null);
 
   const featuresInView = useInView(featuresRef, { once: true, margin: "-100px" });
   const calculatorInView = useInView(calculatorRef, { once: true });
-  const cryptoInView = useInView(cryptoRef, { once: true });
   const testimonialsInView = useInView(testimonialsRef, { once: true });
 
   return (
-    <div className="landing-page min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
+    <div className="landing-page min-h-screen bg-white">
       {/* Navigation */}
-      <nav className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-sm sticky top-0 z-50 transition-colors">
+      <nav className="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
         <div className="container mx-auto px-6 py-4">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center shadow-md">
                 <span className="text-white font-bold text-lg">S</span>
               </div>
-              <div className="text-3xl font-bold text-blue-600 dark:text-white">Sedgwiick</div>
+              <div className="text-3xl font-bold text-blue-600">Sedgwiick</div>
             </div>
             <div className="flex items-center gap-4">
-              <Link to="/login" className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition">
+              <Link to="/login" className="text-gray-600 hover:text-blue-600 transition">
                 Login
               </Link>
               <Link
@@ -137,13 +103,6 @@ const Home = () => {
               >
                 Register
               </Link>
-              <button
-                onClick={() => setDarkMode(!darkMode)}
-                className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition"
-                aria-label="Toggle theme"
-              >
-                {darkMode ? <Sun size={20} /> : <Moon size={20} />}
-              </button>
             </div>
           </div>
         </div>
@@ -214,7 +173,7 @@ const Home = () => {
         initial="hidden"
         animate={featuresInView ? "visible" : "hidden"}
         variants={staggerContainer}
-        className="py-20 bg-gray-50 dark:bg-gray-800 transition-colors"
+        className="py-20 bg-gray-50"
       >
         <div className="container mx-auto px-6">
           <div className="grid md:grid-cols-4 gap-8">
@@ -230,11 +189,11 @@ const Home = () => {
                 whileHover={{ scale: 1.03 }}
                 className="text-center group"
               >
-                <div className="bg-blue-100 dark:bg-blue-900/30 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-blue-200 dark:group-hover:bg-blue-800 transition">
-                  <item.icon className="text-blue-600 dark:text-blue-400" size={36} />
+                <div className="bg-blue-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-blue-200 transition">
+                  <item.icon className="text-blue-600" size={36} />
                 </div>
-                <h3 className="text-xl font-bold mb-2 dark:text-white">{item.title}</h3>
-                <p className="text-gray-600 dark:text-gray-300">{item.desc}</p>
+                <h3 className="text-xl font-bold mb-2">{item.title}</h3>
+                <p className="text-gray-600">{item.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -247,41 +206,11 @@ const Home = () => {
         initial="hidden"
         animate={calculatorInView ? "visible" : "hidden"}
         variants={fadeInUp}
-        className="py-16 bg-white dark:bg-gray-900 transition-colors"
+        className="py-16 bg-white"
       >
         <div className="container mx-auto px-6">
           <div className="max-w-2xl mx-auto">
             <LoanCalculator />
-          </div>
-        </div>
-      </motion.section>
-
-      {/* Crypto Market Prices */}
-      <motion.section
-        ref={cryptoRef}
-        initial="hidden"
-        animate={cryptoInView ? "visible" : "hidden"}
-        variants={fadeInUp}
-        className="py-16 bg-gray-900 dark:bg-black text-white transition-colors"
-      >
-        <div className="container mx-auto px-6">
-          <h2 className="text-3xl font-bold text-center mb-8">Today's Crypto Market</h2>
-          <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-            {Object.entries(cryptoPrices).map(([coin, data]) => (
-              <motion.div
-                key={coin}
-                whileHover={{ scale: 1.05 }}
-                className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 text-center transition"
-              >
-                <h3 className="text-xl font-bold capitalize mb-2 text-gray-800 dark:text-white">{coin}</h3>
-                <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">
-                  ${data.usd?.toLocaleString()}
-                </p>
-                <p className={`text-sm font-semibold mt-2 ${data.change24h >= 0 ? "text-green-600" : "text-red-600"}`}>
-                  24h Change: {data.change24h?.toFixed(2)}%
-                </p>
-              </motion.div>
-            ))}
           </div>
         </div>
       </motion.section>
@@ -291,18 +220,18 @@ const Home = () => {
   <motion.div
     key={testimonial._id}
     whileHover={{ y: -5 }}
-    className="bg-white dark:bg-gray-900 rounded-xl p-6 shadow-md hover:shadow-xl transition border border-gray-100 dark:border-gray-700 flex flex-col"
+    className="bg-white rounded-xl p-6 shadow-md hover:shadow-xl border border-gray-100 flex flex-col"
   >
     <div className="flex items-center mb-4">
       <div className="text-yellow-400 text-lg">
         {"★".repeat(testimonial.rating)}{"☆".repeat(5 - testimonial.rating)}
       </div>
     </div>
-    <p className="text-gray-700 dark:text-gray-300 mb-4 flex-grow">"{testimonial.content}"</p>
-    <div className="border-t dark:border-gray-700 pt-3 mt-2">
-      <p className="font-semibold text-gray-900 dark:text-white">{testimonial.author}</p>
+    <p className="text-gray-700 mb-4 flex-grow">"{testimonial.content}"</p>
+    <div className="border-t pt-3 mt-2">
+      <p className="font-semibold text-gray-900">{testimonial.author}</p>
       {testimonial.loanAmount > 0 && (
-        <p className="text-sm text-blue-600 dark:text-blue-400 font-medium">
+        <p className="text-sm text-blue-600 font-medium">
           Loan: ${testimonial.loanAmount.toLocaleString()}
         </p>
       )}
@@ -310,7 +239,7 @@ const Home = () => {
   </motion.div>
 ))}
       {/* Footer */}
-      <footer className="bg-gray-900 dark:bg-black text-white py-10 transition-colors">
+      <footer className="bg-gray-900 text-white py-10">
         <div className="container mx-auto px-6 text-center">
           <p>&copy; 2026 Sedgwick. All rights reserved.</p>
           <p className="text-sm text-gray-400 mt-2">Built for financial freedom. Secure, transparent, fast.</p>

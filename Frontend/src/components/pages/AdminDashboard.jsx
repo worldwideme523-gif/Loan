@@ -142,10 +142,10 @@ const AdminDashboard = () => {
   }
 
   const statCards = [
-    { label: 'Total Users', value: users.length, sub: `${clientCount} clients`, icon: Users, gradient: 'from-emerald-500 to-emerald-600' },
-    { label: 'Total Funds', value: `$${totalBalance.toLocaleString()}`, icon: DollarSign, gradient: 'from-blue-500 to-blue-600' },
-    { label: 'Pending Apps', value: pendingApps, sub: `${approvedApps} approved`, icon: FileText, gradient: 'from-violet-500 to-violet-600' },
-    { label: 'Pending Repays', value: pendingRepays, icon: Banknote, gradient: 'from-amber-500 to-amber-600' },
+    { label: 'Total Users', value: users.length, sub: `${clientCount} clients`, icon: Users, gradient: 'from-blue-500 to-blue-600' },
+    { label: 'Total Funds', value: `$${totalBalance.toLocaleString()}`, icon: DollarSign, gradient: 'from-emerald-500 to-emerald-600' },
+    { label: 'Pending Apps', value: pendingApps, sub: `${approvedApps} approved`, icon: FileText, gradient: 'from-amber-500 to-amber-600' },
+    { label: 'Pending Repays', value: pendingRepays, icon: Banknote, gradient: 'from-violet-500 to-violet-600' },
   ];
 
   const monthlyActivity = useMemo(() => {
@@ -172,9 +172,9 @@ const AdminDashboard = () => {
   }, [pendingApps, approvedApps, deniedApps])
 
   const barChartConfig = {
-    applications: { label: 'Applications', color: 'hsl(var(--primary))' },
-    users: { label: 'New Users', color: 'hsl(var(--chart-2))' },
-    repayments: { label: 'Repayments', color: 'hsl(var(--chart-3))' },
+    applications: { label: 'Applications', color: '#3b82f6' },
+    users: { label: 'New Users', color: '#10b981' },
+    repayments: { label: 'Repayments', color: '#8b5cf6' },
   }
 
   return (
@@ -195,8 +195,8 @@ const AdminDashboard = () => {
         />
         <div className="flex flex-1 flex-col gap-4 p-4 md:p-6">
           {message && (
-            <Alert variant="default" className="border-blue-200 bg-blue-50 dark:bg-blue-950/20 dark:border-blue-800">
-              <AlertDescription className="text-blue-800 dark:text-blue-300">{message}</AlertDescription>
+            <Alert variant="default" className="border-blue-200 bg-blue-50">
+              <AlertDescription className="text-blue-800">{message}</AlertDescription>
             </Alert>
           )}
 
@@ -233,7 +233,7 @@ const AdminDashboard = () => {
                     data={statusData}
                     nameKey="name"
                     valueKey="value"
-                    colors={["hsl(var(--chart-3))", "hsl(var(--chart-2))", "hsl(var(--chart-4))"]}
+                    colors={["#f59e0b", "#10b981", "#ef4444"]}
                     height={280}
                   />
                 ) : (
@@ -252,7 +252,7 @@ const AdminDashboard = () => {
               </div>
 
               <Card className="shadow-sm border-0 ring-1 ring-foreground/5">
-                <div className="h-1 bg-gradient-to-r from-emerald-500 via-blue-500 to-violet-500" />
+                <div className="h-1 bg-gradient-to-r from-blue-500 to-indigo-600" />
                 <CardHeader className="p-4 md:p-6">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <div>
@@ -287,7 +287,7 @@ const AdminDashboard = () => {
                             <TableRow key={u._id} className="hover:bg-muted/50 transition-colors">
                               <TableCell className="px-4 md:px-6 py-3">
                                 <div className="flex items-center gap-3">
-                                  <div className="size-8 rounded-full bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center shrink-0">
+                                  <div className="size-8 rounded-full bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center shrink-0">
                                     <span className="text-xs font-medium text-white">{u.name?.charAt(0)?.toUpperCase()}</span>
                                   </div>
                                   <div className="min-w-0">
@@ -328,7 +328,7 @@ const AdminDashboard = () => {
 
           {selectedTab === 'applications' && (
             <Card className="shadow-sm border-0 ring-1 ring-foreground/5">
-              <div className="h-1 bg-gradient-to-r from-violet-500 to-purple-500" />
+              <div className="h-1 bg-gradient-to-r from-amber-500 to-orange-500" />
               <CardHeader className="p-4 md:p-6">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <div>
@@ -368,7 +368,7 @@ const AdminDashboard = () => {
                             <TableCell className="px-4 md:px-6 py-3 text-sm text-muted-foreground hidden md:table-cell">{new Date(app.createdAt).toLocaleDateString()}</TableCell>
                             <TableCell className="px-4 md:px-6 py-3 text-right">
                               <div className="flex items-center justify-end gap-1.5">
-                                <Button size="sm" variant="ghost" className="h-8 px-2 text-xs text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-950/30" onClick={() => handleApproveLoan(app._id)}>
+                                <Button size="sm" variant="ghost" className="h-8 px-2 text-xs text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50" onClick={() => handleApproveLoan(app._id)}>
                                   <CheckCircle className="mr-1 size-3.5" /> Approve
                                 </Button>
                                 <Button size="sm" variant="ghost" className="h-8 px-2 text-xs text-destructive hover:text-destructive" onClick={() => handleDenyLoan(app._id)}>
@@ -388,7 +388,7 @@ const AdminDashboard = () => {
 
           {selectedTab === 'repayments' && (
             <Card className="shadow-sm border-0 ring-1 ring-foreground/5">
-              <div className="h-1 bg-gradient-to-r from-amber-500 to-orange-500" />
+              <div className="h-1 bg-gradient-to-r from-emerald-500 to-teal-500" />
               <CardHeader className="p-4 md:p-6">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <div>
@@ -407,7 +407,6 @@ const AdminDashboard = () => {
                       <TableRow className="border-t md:border-t-0">
                         <TableHead className="px-4 md:px-6 py-3">User</TableHead>
                         <TableHead className="px-4 md:px-6 py-3 text-right">Amount</TableHead>
-                        <TableHead className="px-4 md:px-6 py-3 hidden sm:table-cell">Tx Hash</TableHead>
                         <TableHead className="px-4 md:px-6 py-3 hidden md:table-cell">Date</TableHead>
                         <TableHead className="px-4 md:px-6 py-3 text-right">Action</TableHead>
                       </TableRow>
@@ -415,19 +414,16 @@ const AdminDashboard = () => {
                     <TableBody>
                       {repayments.length === 0 ? (
                         <TableRow>
-                          <TableCell colSpan={5} className="text-center text-muted-foreground py-12">No pending repayments</TableCell>
+                          <TableCell colSpan={4} className="text-center text-muted-foreground py-12">No pending repayments</TableCell>
                         </TableRow>
                       ) : (
                         repayments.map(req => (
                           <TableRow key={req._id} className="hover:bg-muted/50 transition-colors">
                             <TableCell className="px-4 md:px-6 py-3 font-medium">{req.userId?.name}</TableCell>
                             <TableCell className="px-4 md:px-6 py-3 text-right font-medium">${req.amount?.toLocaleString()}</TableCell>
-                            <TableCell className="px-4 md:px-6 py-3 hidden sm:table-cell">
-                              <code className="text-xs bg-muted px-2 py-1 rounded max-w-[160px] block truncate font-mono">{req.transactionHash}</code>
-                            </TableCell>
                             <TableCell className="px-4 md:px-6 py-3 text-sm text-muted-foreground hidden md:table-cell">{new Date(req.createdAt).toLocaleDateString()}</TableCell>
                             <TableCell className="px-4 md:px-6 py-3 text-right">
-                              <Button size="sm" variant="ghost" className="h-8 px-2 text-xs text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-950/30" onClick={() => handleMarkRepaymentReceived(req._id)}>
+                              <Button size="sm" variant="ghost" className="h-8 px-2 text-xs text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50" onClick={() => handleMarkRepaymentReceived(req._id)}>
                                 <CheckCircle className="mr-1 size-3.5" /> Mark Received
                               </Button>
                             </TableCell>
@@ -502,7 +498,7 @@ const AdminDashboard = () => {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Add Funds</DialogTitle>
-            <DialogDescription>Enter the amount to credit the user's wallet.</DialogDescription>
+            <DialogDescription>Enter the amount to credit the user's account.</DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">

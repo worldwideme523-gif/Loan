@@ -15,7 +15,6 @@ const repaymentRequestSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
-  transactionHash: String,
   status: {
     type: String,
     enum: ['pending', 'received', 'rejected'],
