@@ -11,76 +11,93 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { Badge } from "@/components/ui/badge"
-import { LogOut, User } from "lucide-react"
+import { LogOut } from "lucide-react"
 
 export function AppSidebar({ items, user, role, activeTab, onNavigate, onLogout, ...props }) {
   return (
-    <Sidebar variant="sidebar" collapsible="icon" {...props}>
-      <SidebarHeader>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton size="lg" asChild>
-              <div className="flex items-center gap-3">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-sidebar-primary-foreground">
-                  <User className="size-4" />
-                </div>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">{user?.name}</span>
-                  <span className="truncate text-xs">{user?.email}</span>
-                </div>
-              </div>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
+    <Sidebar
+      variant="sidebar"
+      collapsible="icon"
+      className="border-r border-slate-700/50 bg-slate-900 text-white [--sidebar-accent:transparent] [--sidebar-accent-foreground:inherit]"
+      {...props}
+    >
+      {/* Brand Header */}
+      <SidebarHeader className="border-b border-slate-700/50 p-4">
+        <div className="flex items-center gap-3">
+          <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-500 to-teal-500 shadow-lg shadow-emerald-500/20">
+            <span className="text-sm font-bold text-white">S</span>
+          </div>
+          <div className="min-w-0">
+            <p className="text-sm font-semibold text-white truncate">Velaris</p>
+            <p className="text-[11px] text-slate-400 truncate leading-tight">Loan Platform</p>
+          </div>
+        </div>
       </SidebarHeader>
-      <SidebarContent>
+
+      {/* Navigation */}
+      <SidebarContent className="p-3">
         <SidebarGroup>
-          <SidebarGroupLabel>Navigation</SidebarGroupLabel>
+          <SidebarGroupLabel className="px-3 py-1.5 text-[11px] font-semibold text-slate-500 uppercase tracking-widest">
+            Menu
+          </SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.id}>
-                  <SidebarMenuButton
-                    isActive={activeTab === item.id}
-                    onClick={() => onNavigate(item.id)}
-                    tooltip={item.label}
-                  >
-                    <item.icon />
-                    <span>{item.label}</span>
-                    {item.count !== undefined && (
-                      <Badge
-                        variant={item.count > 0 ? "default" : "outline"}
-                        className="ml-auto text-[10px] h-5 px-1.5"
-                      >
-                        {item.count}
-                      </Badge>
-                    )}
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-        <SidebarGroup>
-          <SidebarGroupLabel>Account</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton onClick={onLogout} tooltip="Sign Out">
-                  <LogOut />
-                  <span>Sign Out</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
+            <SidebarMenu className="space-y-0.5">
+              {items.map((item) => {
+                const isActive = activeTab === item.id
+                return (
+                  <SidebarMenuItem key={item.id}>
+                    <SidebarMenuButton
+                      isActive={isActive}
+                      onClick={() => onNavigate(item.id)}
+                      tooltip={item.label}
+                      className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200 ${
+                        isActive
+                          ? 'bg-emerald-500 text-white shadow-sm shadow-emerald-500/30 data-[active=true]:bg-emerald-500 data-[active=true]:text-white'
+                          : 'text-slate-300 hover:bg-blue-500/20 hover:text-blue-200'
+                      }`}
+                    >
+                      <item.icon className="size-[18px] shrink-0" />
+                      <span className="truncate">{item.label}</span>
+                      {item.count !== undefined && (
+                        <Badge
+                          variant={item.count > 0 ? "default" : "outline"}
+                          className={`ml-auto text-[10px] h-5 px-1.5 shrink-0 ${
+                            isActive
+                              ? 'bg-emerald-400 text-emerald-900 border-0'
+                              : 'bg-slate-700 text-slate-300 border-0'
+                          }`}
+                        >
+                          {item.count}
+                        </Badge>
+                      )}
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                )
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter>
-        <div className="flex items-center gap-2 px-3 py-2 text-xs text-muted-foreground">
-          <Badge variant="secondary" className="text-[10px] h-5 px-1.5">
-            {role}
-          </Badge>
-          <span className="truncate">{user?.name}</span>
+
+      {/* User Footer - pinned to bottom */}
+      <SidebarFooter className="border-t border-slate-700/50 p-4 mt-auto">
+        <div className="flex items-center gap-3">
+          <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-slate-600 to-slate-700 ring-2 ring-slate-600 shadow-sm">
+            <span className="text-sm font-semibold text-white">
+              {user?.name?.charAt(0)?.toUpperCase() || 'U'}
+            </span>
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-medium text-white truncate">{user?.name || 'User'}</p>
+            <p className="text-[11px] text-slate-400 truncate leading-tight">{role}</p>
+          </div>
+          <button
+            onClick={onLogout}
+            className="flex size-8 shrink-0 items-center justify-center rounded-lg text-slate-400 hover:bg-red-500/15 hover:text-red-400 transition-all duration-200"
+            title="Sign Out"
+          >
+            <LogOut className="size-[18px]" />
+          </button>
         </div>
       </SidebarFooter>
     </Sidebar>
