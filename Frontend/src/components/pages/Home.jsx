@@ -118,12 +118,12 @@ const Home = () => {
       </nav>
 
       {/* Hero Carousel */}
-      <div className="relative h-[90vh] min-h-[600px] overflow-hidden">
+      <div className="relative h-[85vh] sm:h-[90vh] min-h-[550px] sm:min-h-[600px] overflow-hidden">
         {carouselImages.map((img, idx) => (
           <div
             key={idx}
-            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-              idx === currentImageIndex ? "opacity-100" : "opacity-0"
+            className={`absolute inset-0 transition-all duration-1000 ease-in-out ${
+              idx === currentImageIndex ? "opacity-100 scale-100" : "opacity-0 scale-105"
             }`}
             style={{
               backgroundImage: `url(${img})`,
@@ -132,43 +132,109 @@ const Home = () => {
             }}
           />
         ))}
-        <div className="absolute inset-0 bg-black/50" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
         <button
           onClick={handlePrev}
-          className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/30 hover:bg-white/50 text-white p-2 rounded-full backdrop-blur-sm transition z-10"
+          className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/25 text-white p-2.5 sm:p-3 rounded-full backdrop-blur-md border border-white/20 transition-all duration-300 z-10 hover:scale-110"
         >
-          <ChevronLeft size={28} />
+          <ChevronLeft size={22} className="sm:size-[28]" />
         </button>
         <button
           onClick={handleNext}
-          className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/30 hover:bg-white/50 text-white p-2 rounded-full backdrop-blur-sm transition z-10"
+          className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/25 text-white p-2.5 sm:p-3 rounded-full backdrop-blur-md border border-white/20 transition-all duration-300 z-10 hover:scale-110"
         >
-          <ChevronRight size={28} />
+          <ChevronRight size={22} className="sm:size-[28]" />
         </button>
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="relative z-10 flex flex-col items-center justify-center h-full text-white text-center px-4"
+          transition={{ duration: 0.9, ease: "easeOut" }}
+          className="relative z-10 flex flex-col items-center justify-center h-full text-white text-center px-4 sm:px-6"
         >
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 drop-shadow-lg">Get Funding Instantly</h1>
-          <p className="text-xl md:text-2xl mb-10 max-w-3xl drop-shadow-md">
-            Secure loans from $100,000 to $100,000,000 with flexible repayment plans.<br />
-            Fast approval, friendly.
-          </p>
-          <Link
-            to="/register"
-            className="bg-blue-600 hover:bg-blue-700 text-white text-lg px-8 py-4 rounded-full font-semibold shadow-xl transition transform hover:scale-105"
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.6 }}
+            className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-4 sm:px-5 py-1.5 sm:py-2 text-xs sm:text-sm font-medium mb-6 sm:mb-8 tracking-wide"
           >
-            Apply for a Loan →
-          </Link>
-          <div className="mt-12 flex space-x-2">
+            <div className="size-2 bg-emerald-400 rounded-full animate-pulse" />
+            Trusted by 10,000+ clients worldwide
+          </motion.div>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.35, duration: 0.7 }}
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight sm:leading-tight drop-shadow-2xl max-w-4xl"
+          >
+            Get Funding{' '}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-cyan-300">
+              Instantly
+            </span>
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.7 }}
+            className="text-base sm:text-lg md:text-xl lg:text-2xl mt-4 sm:mt-6 mb-8 sm:mb-12 max-w-2xl sm:max-w-3xl drop-shadow-lg text-white/90 leading-relaxed"
+          >
+            Secure loans from $100,000 to $100,000,000 with flexible repayment plans.
+            Fast approval, transparent terms, dedicated support.
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.65, duration: 0.7 }}
+            className="flex flex-col sm:flex-row items-center gap-4 sm:gap-5"
+          >
+            <Link
+              to="/register"
+              className="group relative inline-flex items-center gap-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-base sm:text-lg px-8 sm:px-10 py-3.5 sm:py-4 rounded-full font-semibold shadow-2xl hover:shadow-blue-500/30 transition-all duration-300 hover:scale-105 active:scale-100 overflow-hidden"
+            >
+              <span className="relative z-10">Apply for a Loan</span>
+              <span className="relative z-10 group-hover:translate-x-1 transition-transform duration-200">→</span>
+              <div className="absolute inset-0 -translate-x-full group-hover:translate-x-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 transition-transform duration-700" />
+            </Link>
+            <Link
+              to="/login"
+              className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/25 text-white text-base sm:text-lg px-7 sm:px-9 py-3.5 sm:py-4 rounded-full font-medium transition-all duration-300 hover:scale-105 active:scale-100"
+            >
+              Sign In
+              <ChevronRight size={18} />
+            </Link>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.9, duration: 0.6 }}
+            className="mt-10 sm:mt-14 flex items-center gap-4 sm:gap-6 text-white/60 text-xs sm:text-sm"
+          >
+            <div className="flex items-center gap-1.5">
+              <div className="size-1.5 bg-emerald-400 rounded-full" />
+              No hidden fees
+            </div>
+            <div className="flex items-center gap-1.5">
+              <div className="size-1.5 bg-emerald-400 rounded-full" />
+              90-day approval
+            </div>
+            <div className="flex items-center gap-1.5">
+              <div className="size-1.5 bg-emerald-400 rounded-full" />
+              Fixed rates
+            </div>
+          </motion.div>
+
+          <div className="mt-8 sm:mt-10 flex items-center gap-2.5">
             {carouselImages.map((_, idx) => (
               <button
                 key={idx}
                 onClick={() => setCurrentImageIndex(idx)}
-                className={`w-3 h-3 rounded-full transition-all ${
-                  idx === currentImageIndex ? "bg-white w-6" : "bg-white/50"
+                className={`rounded-full transition-all duration-500 ${
+                  idx === currentImageIndex
+                    ? "bg-white w-8 sm:w-10 h-2.5"
+                    : "bg-white/30 hover:bg-white/50 w-2.5 h-2.5"
                 }`}
               />
             ))}
