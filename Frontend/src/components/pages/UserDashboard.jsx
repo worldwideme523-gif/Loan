@@ -99,6 +99,7 @@ const UserDashboard = () => {
 
   const pendingApps = applications.filter(a => a.status === 'pending').length;
   const approvedApps = applications.filter(a => a.status === 'approved').length;
+  const totalApprovedAmount = applications.filter(a => a.status === 'approved').reduce((s, a) => s + (a.amount || a.approvedAmount || 0), 0);
   const totalRepaid = repayments.filter(r => r.status === 'received').reduce((s, r) => s + r.amount, 0);
   const totalRepaymentPending = repayments.filter(r => r.status === 'pending').reduce((s, r) => s + r.amount, 0);
 
@@ -124,9 +125,10 @@ const UserDashboard = () => {
       gradient: 'from-blue-500 to-blue-600',
     },
     {
-      label: 'Active Loan',
-      value: activeLoan ? `$${activeLoan.approvedAmount?.toLocaleString()}` : 'No active loan',
+      label: 'Active Loans',
+      value: approvedApps,
       icon: Banknote,
+      sub: approvedApps > 0 ? `$${totalApprovedAmount.toLocaleString()} total` : 'No active loans',
       gradient: 'from-violet-500 to-violet-600',
     },
     {

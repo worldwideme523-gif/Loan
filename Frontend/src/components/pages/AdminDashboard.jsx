@@ -2,14 +2,10 @@ import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import axiosInstance from '../../config/axios';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
@@ -259,457 +255,531 @@ const AdminDashboard = () => {
           page={navItems.find(n => n.id === selectedTab)?.label}
           user={user}
         />
-        <div className="flex flex-1 flex-col gap-4 p-4 md:p-6">
+        <div className="flex flex-1 flex-col gap-4 p-4 md:p-6 bg-gradient-to-br from-blue-50 via-white to-indigo-50/40">
           {message && (
-            <Alert variant="default" className="border-blue-200 bg-blue-50">
-              <AlertDescription className="text-blue-800">{message}</AlertDescription>
-            </Alert>
+            <div className="relative overflow-hidden rounded-xl border border-blue-200 bg-blue-50/80 backdrop-blur-sm px-5 py-3">
+              <div className="flex items-center gap-3">
+                <div className="size-2 rounded-full bg-blue-500 animate-pulse shrink-0" />
+                <p className="text-sm text-blue-700 font-medium">{message}</p>
+              </div>
+            </div>
           )}
 
           {selectedTab === 'users' && (
             <div className="flex flex-col gap-4 md:gap-6">
 
+              {/* Stats Row */}
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                 {statCards.map((card, i) => (
-                  <Card key={i} className={`bg-gradient-to-br ${card.gradient} text-white border-0 shadow-sm`}>
-                    <CardHeader className="flex flex-row items-center justify-between pb-2">
-                      <CardTitle className="text-sm font-medium text-white/80">{card.label}</CardTitle>
-                      <card.icon className="size-4 text-white/60" />
-                    </CardHeader>
-                    <CardContent>
-                      <div className="text-2xl font-bold">{card.value}</div>
-                      {card.sub && <p className="text-xs text-white/70 mt-1">{card.sub}</p>}
-                    </CardContent>
-                  </Card>
+                  <div key={i} className="relative overflow-hidden rounded-2xl bg-white border border-slate-200/80 p-5 shadow-sm hover:shadow-md group hover:border-slate-300 transition-all duration-300">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-slate-100/50 to-transparent rounded-full blur-2xl" />
+                    <div className="relative flex items-start justify-between">
+                      <div className="space-y-1.5">
+                        <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">{card.label}</p>
+                        <p className="text-2xl font-bold text-slate-900">{card.value}</p>
+                        {card.sub && <p className="text-xs text-slate-400">{card.sub}</p>}
+                      </div>
+                      <div className={`p-3 rounded-xl bg-gradient-to-br ${card.gradient} shadow-md shrink-0`}>
+                        <card.icon className="size-5 text-white" />
+                      </div>
+                    </div>
+                  </div>
                 ))}
               </div>
 
+              {/* Charts */}
               <div className="grid gap-4 md:gap-6 lg:grid-cols-2">
-                <ChartBarGroup
-                  title="Platform Activity"
-                  description="Monthly applications, users, and repayments"
-                  data={monthlyActivity.length > 0 ? monthlyActivity : [{ name: 'No data', applications: 0, users: 0, repayments: 0 }]}
-                  config={barChartConfig}
-                  height={280}
-                />
-                {statusData.some(d => d.value > 0) ? (
-                  <ChartDonut
-                    title="Application Status"
-                    description="Breakdown of all loan applications"
-                    data={statusData}
-                    nameKey="name"
-                    valueKey="value"
-                    colors={["#f59e0b", "#10b981", "#ef4444"]}
+                <div className="relative overflow-hidden rounded-2xl bg-white border border-slate-200/80 p-5 shadow-sm">
+                  <ChartBarGroup
+                    title="Platform Activity"
+                    description="Monthly applications, users, and repayments"
+                    data={monthlyActivity.length > 0 ? monthlyActivity : [{ name: 'No data', applications: 0, users: 0, repayments: 0 }]}
+                    config={barChartConfig}
                     height={280}
                   />
+                </div>
+                {statusData.some(d => d.value > 0) ? (
+                  <div className="relative overflow-hidden rounded-2xl bg-white border border-slate-200/80 p-5 shadow-sm">
+                    <ChartDonut
+                      title="Application Status"
+                      description="Breakdown of all loan applications"
+                      data={statusData}
+                      nameKey="name"
+                      valueKey="value"
+                      colors={["#f59e0b", "#10b981", "#ef4444"]}
+                      height={280}
+                    />
+                  </div>
                 ) : (
-                  <Card className="shadow-sm border-0 ring-1 ring-foreground/5">
-                    <CardHeader className="p-4 md:p-6">
-                      <CardTitle className="text-lg md:text-xl">Application Status</CardTitle>
-                      <CardDescription className="text-sm">Breakdown of all loan applications</CardDescription>
-                    </CardHeader>
-                    <CardContent className="p-4 md:p-6 pt-0 md:pt-0 flex flex-col items-center justify-center py-12 text-muted-foreground">
-                      <PieChart className="size-10 mb-3 opacity-30" />
-                      <p className="text-sm">No applications yet</p>
-                      <p className="text-xs mt-1">Applications will appear here once submitted</p>
-                    </CardContent>
-                  </Card>
+                  <div className="relative overflow-hidden rounded-2xl bg-white border border-slate-200/80 p-5 shadow-sm flex flex-col items-center justify-center py-12">
+                    <PieChart className="size-10 mb-3 text-slate-300" />
+                    <p className="text-sm font-medium text-slate-500">No applications yet</p>
+                    <p className="text-xs text-slate-400 mt-1">Applications will appear here once submitted</p>
+                  </div>
                 )}
               </div>
 
-              <Card className="shadow-sm border-0 ring-1 ring-foreground/5">
-                <div className="h-1 bg-gradient-to-r from-blue-500 to-indigo-600" />
-                <CardHeader className="p-4 md:p-6">
+              {/* Users Table */}
+              <div className="relative overflow-hidden rounded-2xl bg-white border border-slate-200/80 shadow-sm">
+                <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500" />
+                <div className="px-5 py-5 border-b border-slate-200">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                    <div>
-                      <CardTitle className="text-lg md:text-xl">All Users</CardTitle>
-                      <CardDescription className="text-sm">Manage user accounts and balances</CardDescription>
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 shadow-md">
+                        <Users className="size-4 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="text-base font-semibold text-slate-900">All Users</h3>
+                        <p className="text-xs text-slate-500">Manage user accounts and balances</p>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground shrink-0">
-                      <Users className="size-4" />
-                      <span className="font-medium text-foreground">{users.length}</span> total
+                    <div className="flex items-center gap-2 text-xs text-slate-500">
+                      <Users className="size-3.5" />
+                      <span className="font-semibold text-slate-700">{users.length}</span> total
                     </div>
                   </div>
-                </CardHeader>
-                <CardContent className="p-0 md:p-0">
-                  <div className="overflow-x-auto">
-                    <Table>
-                      <TableHeader>
-                        <TableRow className="border-t md:border-t-0">
-                          <TableHead className="px-4 md:px-6 py-3">Name</TableHead>
-                          <TableHead className="px-4 md:px-6 py-3 hidden sm:table-cell">Email</TableHead>
-                          <TableHead className="px-4 md:px-6 py-3 text-right">Balance</TableHead>
-                          <TableHead className="px-4 md:px-6 py-3 hidden md:table-cell">Role</TableHead>
-                          <TableHead className="px-4 md:px-6 py-3 text-right">Actions</TableHead>
+                </div>
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="border-slate-200 hover:bg-transparent">
+                        <TableHead className="px-5 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wider">Name</TableHead>
+                        <TableHead className="px-5 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wider hidden sm:table-cell">Email</TableHead>
+                        <TableHead className="px-5 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">Balance</TableHead>
+                        <TableHead className="px-5 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wider hidden md:table-cell">Role</TableHead>
+                        <TableHead className="px-5 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {users.length === 0 ? (
+                        <TableRow>
+                          <TableCell colSpan={5} className="text-center text-slate-400 py-16">No users found</TableCell>
                         </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {users.length === 0 ? (
-                          <TableRow>
-                            <TableCell colSpan={5} className="text-center text-muted-foreground py-12">No users found</TableCell>
+                      ) : (
+                        users.map(u => (
+                          <TableRow key={u._id} className="border-slate-100 hover:bg-slate-50/80 transition-colors">
+                            <TableCell className="px-5 py-3.5">
+                              <div className="flex items-center gap-3">
+                                <div className="size-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shrink-0 shadow-sm">
+                                  <span className="text-xs font-bold text-white">{u.name?.charAt(0)?.toUpperCase()}</span>
+                                </div>
+                                <div className="min-w-0">
+                                  <p className="text-sm font-semibold text-slate-800 truncate">{u.name}</p>
+                                  <p className="text-xs text-slate-400 sm:hidden truncate">{u.email}</p>
+                                </div>
+                              </div>
+                            </TableCell>
+                            <TableCell className="px-5 py-3.5 text-sm text-slate-500 hidden sm:table-cell">{u.email}</TableCell>
+                            <TableCell className="px-5 py-3.5 text-sm font-semibold text-right text-emerald-600">${u.walletBalance?.toLocaleString()}</TableCell>
+                            <TableCell className="px-5 py-3.5 hidden md:table-cell">
+                              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                                u.role === 'superadmin' ? 'bg-purple-100 text-purple-700 ring-1 ring-purple-300' :
+                                u.role === 'admin' ? 'bg-blue-100 text-blue-700 ring-1 ring-blue-300' :
+                                'bg-slate-100 text-slate-600 ring-1 ring-slate-300'
+                              }`}>
+                                {u.role}
+                              </span>
+                            </TableCell>
+                            <TableCell className="px-5 py-3.5 text-right">
+                              <div className="flex items-center justify-end gap-1.5">
+                                <button onClick={() => openEmailDialog(u)} className="h-8 px-2.5 rounded-lg text-xs font-medium text-blue-600 hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 flex items-center gap-1.5">
+                                  <Mail className="size-3.5" /> <span className="hidden xs:inline">Email</span>
+                                </button>
+                                <button onClick={() => openAddFunds(u._id)} className="h-8 px-2.5 rounded-lg text-xs font-medium text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700 transition-all duration-200 flex items-center gap-1.5">
+                                  <DollarSign className="size-3.5" /> <span className="hidden xs:inline">Funds</span>
+                                </button>
+                                {isSuperAdmin && (
+                                  <button onClick={() => handleDeleteUser(u._id)} className="h-8 px-2.5 rounded-lg text-xs font-medium text-red-500 hover:bg-red-50 hover:text-red-600 transition-all duration-200 flex items-center gap-1.5">
+                                    <Trash2 className="size-3.5" />
+                                  </button>
+                                )}
+                              </div>
+                            </TableCell>
                           </TableRow>
-                        ) : (
-                          users.map(u => (
-                            <TableRow key={u._id} className="hover:bg-muted/50 transition-colors">
-                              <TableCell className="px-4 md:px-6 py-3">
-                                <div className="flex items-center gap-3">
-                                  <div className="size-8 rounded-full bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center shrink-0">
-                                    <span className="text-xs font-medium text-white">{u.name?.charAt(0)?.toUpperCase()}</span>
-                                  </div>
-                                  <div className="min-w-0">
-                                    <p className="text-sm font-medium truncate">{u.name}</p>
-                                    <p className="text-xs text-muted-foreground sm:hidden truncate">{u.email}</p>
-                                  </div>
-                                </div>
-                              </TableCell>
-                              <TableCell className="px-4 md:px-6 py-3 text-sm text-muted-foreground hidden sm:table-cell">{u.email}</TableCell>
-                              <TableCell className="px-4 md:px-6 py-3 text-sm font-medium text-right">${u.walletBalance?.toLocaleString()}</TableCell>
-                              <TableCell className="px-4 md:px-6 py-3 hidden md:table-cell">
-                                <Badge variant={u.role === 'superadmin' ? 'default' : u.role === 'admin' ? 'secondary' : 'outline'} className="capitalize">
-                                  {u.role}
-                                </Badge>
-                              </TableCell>
-                              <TableCell className="px-4 md:px-6 py-3 text-right">
-                                <div className="flex items-center justify-end gap-1.5">
-                                  <Button size="sm" variant="ghost" className="h-8 px-2 text-xs text-blue-600 hover:text-blue-700 hover:bg-blue-50" onClick={() => openEmailDialog(u)}>
-                                    <Mail className="mr-1 size-3.5" /> <span className="hidden xs:inline">Email</span>
-                                  </Button>
-                                  <Button size="sm" variant="ghost" className="h-8 px-2 text-xs" onClick={() => openAddFunds(u._id)}>
-                                    <DollarSign className="mr-1 size-3.5" /> <span className="hidden xs:inline">Funds</span>
-                                  </Button>
-                                  {isSuperAdmin && (
-                                    <Button size="sm" variant="ghost" className="h-8 px-2 text-xs text-destructive hover:text-destructive" onClick={() => handleDeleteUser(u._id)}>
-                                      <Trash2 className="size-3.5" />
-                                    </Button>
-                                  )}
-                                </div>
-                              </TableCell>
-                            </TableRow>
-                          ))
-                        )}
-                      </TableBody>
-                    </Table>
-                  </div>
-                </CardContent>
-              </Card>
+                        ))
+                      )}
+                    </TableBody>
+                  </Table>
+                </div>
+              </div>
             </div>
           )}
 
           {selectedTab === 'applications' && (
-            <Card className="shadow-sm border-0 ring-1 ring-foreground/5">
-              <div className="h-1 bg-gradient-to-r from-amber-500 to-orange-500" />
-              <CardHeader className="p-4 md:p-6">
+            <div className="relative overflow-hidden rounded-2xl bg-white border border-slate-200/80 shadow-sm">
+              <div className="absolute top-0 right-0 w-56 h-56 bg-amber-100/40 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+              <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-amber-400 via-orange-400 to-red-400" />
+              <div className="px-5 py-5 border-b border-slate-200 relative">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                  <div>
-                    <CardTitle className="text-lg md:text-xl">Loan Applications</CardTitle>
-                    <CardDescription className="text-sm">Review and process pending applications</CardDescription>
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 shadow-md">
+                      <FileText className="size-4 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-base font-semibold text-slate-900">Loan Applications</h3>
+                      <p className="text-xs text-slate-500">Review and process pending applications</p>
+                    </div>
                   </div>
                   {pendingApps > 0 && (
-                    <Badge variant="warning" className="w-fit text-xs">{pendingApps} pending</Badge>
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-700 ring-1 ring-amber-200">
+                      <span className="size-1.5 rounded-full bg-amber-500 animate-pulse" />
+                      {pendingApps} pending
+                    </span>
                   )}
                 </div>
-              </CardHeader>
-              <CardContent className="p-0 md:p-0">
-                <div className="overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow className="border-t md:border-t-0">
-                        <TableHead className="px-4 md:px-6 py-3">Applicant</TableHead>
-                        <TableHead className="px-4 md:px-6 py-3 text-right">Amount</TableHead>
-                        <TableHead className="px-4 md:px-6 py-3 hidden sm:table-cell">Term</TableHead>
-                        <TableHead className="px-4 md:px-6 py-3">Status</TableHead>
-                        <TableHead className="px-4 md:px-6 py-3 hidden md:table-cell">Date</TableHead>
-                        <TableHead className="px-4 md:px-6 py-3 text-right">Actions</TableHead>
+              </div>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="border-slate-200 hover:bg-transparent">
+                      <TableHead className="px-5 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wider">Applicant</TableHead>
+                      <TableHead className="px-5 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">Amount</TableHead>
+                      <TableHead className="px-5 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wider hidden sm:table-cell">Term</TableHead>
+                      <TableHead className="px-5 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wider">Status</TableHead>
+                      <TableHead className="px-5 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wider hidden md:table-cell">Date</TableHead>
+                      <TableHead className="px-5 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {applications.length === 0 ? (
+                      <TableRow>
+                        <TableCell colSpan={6} className="text-center text-slate-400 py-16">No applications yet</TableCell>
                       </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {applications.length === 0 ? (
-                        <TableRow>
-                          <TableCell colSpan={6} className="text-center text-muted-foreground py-12">No applications yet</TableCell>
-                        </TableRow>
-                      ) : (
-                        applications.filter(a => a.status === 'pending').map(app => (
-                          <TableRow key={app._id} className="hover:bg-muted/50 transition-colors">
-                            <TableCell className="px-4 md:px-6 py-3 font-medium">{app.userId?.name || 'Unknown'}</TableCell>
-                            <TableCell className="px-4 md:px-6 py-3 text-right font-medium">${app.amount?.toLocaleString()}</TableCell>
-                            <TableCell className="px-4 md:px-6 py-3 text-sm text-muted-foreground hidden sm:table-cell">{app.termMonths} months</TableCell>
-                            <TableCell className="px-4 md:px-6 py-3"><Badge variant="warning">Pending</Badge></TableCell>
-                            <TableCell className="px-4 md:px-6 py-3 text-sm text-muted-foreground hidden md:table-cell">{new Date(app.createdAt).toLocaleDateString()}</TableCell>
-                            <TableCell className="px-4 md:px-6 py-3 text-right">
-                              <div className="flex items-center justify-end gap-1.5">
-                                <Button size="sm" variant="ghost" className="h-8 px-2 text-xs text-blue-600 hover:text-blue-700 hover:bg-blue-50" onClick={() => openEmailDialog({ _id: app.userId?._id, name: app.userId?.name || 'Applicant', email: app.userId?.email })}>
-                                  <Mail className="mr-1 size-3.5" /> <span className="hidden xs:inline">Email</span>
-                                </Button>
-                                <Button size="sm" variant="ghost" className="h-8 px-2 text-xs text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50" onClick={() => handleApproveLoan(app._id)}>
-                                  <CheckCircle className="mr-1 size-3.5" /> Approve
-                                </Button>
-                                <Button size="sm" variant="ghost" className="h-8 px-2 text-xs text-destructive hover:text-destructive" onClick={() => handleDenyLoan(app._id)}>
-                                  <XCircle className="mr-1 size-3.5" /> Deny
-                                </Button>
+                    ) : (
+                      applications.filter(a => a.status === 'pending').map(app => (
+                        <TableRow key={app._id} className="border-slate-100 hover:bg-slate-50/80 transition-colors">
+                          <TableCell className="px-5 py-3.5">
+                            <div className="flex items-center gap-3">
+                              <div className="size-8 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shrink-0 shadow-sm">
+                                <span className="text-xs font-bold text-white">{app.userId?.name?.charAt(0)?.toUpperCase() || '?'}</span>
                               </div>
-                            </TableCell>
-                          </TableRow>
-                        ))
-                      )}
-                    </TableBody>
-                  </Table>
-                </div>
-              </CardContent>
-            </Card>
+                              <span className="text-sm font-semibold text-slate-800">{app.userId?.name || 'Unknown'}</span>
+                            </div>
+                          </TableCell>
+                          <TableCell className="px-5 py-3.5 text-right font-semibold text-amber-600">${app.amount?.toLocaleString()}</TableCell>
+                          <TableCell className="px-5 py-3.5 text-sm text-slate-500 hidden sm:table-cell">{app.termMonths} months</TableCell>
+                          <TableCell className="px-5 py-3.5">
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 ring-1 ring-amber-200">
+                              Pending
+                            </span>
+                          </TableCell>
+                          <TableCell className="px-5 py-3.5 text-sm text-slate-400 hidden md:table-cell">{new Date(app.createdAt).toLocaleDateString()}</TableCell>
+                          <TableCell className="px-5 py-3.5 text-right">
+                            <div className="flex items-center justify-end gap-1.5">
+                              <button onClick={() => openEmailDialog({ _id: app.userId?._id, name: app.userId?.name || 'Applicant', email: app.userId?.email })} className="h-8 px-2.5 rounded-lg text-xs font-medium text-blue-600 hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 flex items-center gap-1.5">
+                                <Mail className="size-3.5" /> <span className="hidden xs:inline">Email</span>
+                              </button>
+                              <button onClick={() => handleApproveLoan(app._id)} className="h-8 px-2.5 rounded-lg text-xs font-medium text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700 transition-all duration-200 flex items-center gap-1.5">
+                                <CheckCircle className="size-3.5" /> Approve
+                              </button>
+                              <button onClick={() => handleDenyLoan(app._id)} className="h-8 px-2.5 rounded-lg text-xs font-medium text-red-500 hover:bg-red-50 hover:text-red-600 transition-all duration-200 flex items-center gap-1.5">
+                                <XCircle className="size-3.5" /> Deny
+                              </button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
           )}
 
           {selectedTab === 'repayments' && (
-            <Card className="shadow-sm border-0 ring-1 ring-foreground/5">
-              <div className="h-1 bg-gradient-to-r from-emerald-500 to-teal-500" />
-              <CardHeader className="p-4 md:p-6">
+            <div className="relative overflow-hidden rounded-2xl bg-white border border-slate-200/80 shadow-sm">
+              <div className="absolute top-0 right-0 w-56 h-56 bg-emerald-100/40 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+              <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400" />
+              <div className="px-5 py-5 border-b border-slate-200 relative">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                  <div>
-                    <CardTitle className="text-lg md:text-xl">Repayment Verifications</CardTitle>
-                    <CardDescription className="text-sm">Verify pending repayment requests</CardDescription>
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 shadow-md">
+                      <DollarSign className="size-4 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-base font-semibold text-slate-900">Repayment Verifications</h3>
+                      <p className="text-xs text-slate-500">Verify pending repayment requests</p>
+                    </div>
                   </div>
                   {pendingRepays > 0 && (
-                    <Badge variant="warning" className="w-fit text-xs">{pendingRepays} pending</Badge>
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200">
+                      <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                      {pendingRepays} pending
+                    </span>
                   )}
                 </div>
-              </CardHeader>
-              <CardContent className="p-0 md:p-0">
-                <div className="overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow className="border-t md:border-t-0">
-                        <TableHead className="px-4 md:px-6 py-3">User</TableHead>
-                        <TableHead className="px-4 md:px-6 py-3 text-right">Amount</TableHead>
-                        <TableHead className="px-4 md:px-6 py-3 hidden md:table-cell">Date</TableHead>
-                        <TableHead className="px-4 md:px-6 py-3 text-right">Action</TableHead>
+              </div>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="border-slate-200 hover:bg-transparent">
+                      <TableHead className="px-5 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wider">User</TableHead>
+                      <TableHead className="px-5 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">Amount</TableHead>
+                      <TableHead className="px-5 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wider hidden md:table-cell">Date</TableHead>
+                      <TableHead className="px-5 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">Action</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {repayments.length === 0 ? (
+                      <TableRow>
+                        <TableCell colSpan={4} className="text-center text-slate-400 py-16">No pending repayments</TableCell>
                       </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {repayments.length === 0 ? (
-                        <TableRow>
-                          <TableCell colSpan={4} className="text-center text-muted-foreground py-12">No pending repayments</TableCell>
+                    ) : (
+                      repayments.map(req => (
+                        <TableRow key={req._id} className="border-slate-100 hover:bg-slate-50/80 transition-colors">
+                          <TableCell className="px-5 py-3.5">
+                            <div className="flex items-center gap-3">
+                              <div className="size-8 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shrink-0 shadow-sm">
+                                <span className="text-xs font-bold text-white">{req.userId?.name?.charAt(0)?.toUpperCase() || '?'}</span>
+                              </div>
+                              <span className="text-sm font-semibold text-slate-800">{req.userId?.name}</span>
+                            </div>
+                          </TableCell>
+                          <TableCell className="px-5 py-3.5 text-right font-semibold text-emerald-600">${req.amount?.toLocaleString()}</TableCell>
+                          <TableCell className="px-5 py-3.5 text-sm text-slate-400 hidden md:table-cell">{new Date(req.createdAt).toLocaleDateString()}</TableCell>
+                          <TableCell className="px-5 py-3.5 text-right">
+                            <button onClick={() => handleMarkRepaymentReceived(req._id)} className="h-8 px-3 rounded-lg text-xs font-medium text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700 transition-all duration-200 flex items-center gap-1.5 ml-auto">
+                              <CheckCircle className="size-3.5" /> Mark Received
+                            </button>
+                          </TableCell>
                         </TableRow>
-                      ) : (
-                        repayments.map(req => (
-                          <TableRow key={req._id} className="hover:bg-muted/50 transition-colors">
-                            <TableCell className="px-4 md:px-6 py-3 font-medium">{req.userId?.name}</TableCell>
-                            <TableCell className="px-4 md:px-6 py-3 text-right font-medium">${req.amount?.toLocaleString()}</TableCell>
-                            <TableCell className="px-4 md:px-6 py-3 text-sm text-muted-foreground hidden md:table-cell">{new Date(req.createdAt).toLocaleDateString()}</TableCell>
-                            <TableCell className="px-4 md:px-6 py-3 text-right">
-                              <Button size="sm" variant="ghost" className="h-8 px-2 text-xs text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50" onClick={() => handleMarkRepaymentReceived(req._id)}>
-                                <CheckCircle className="mr-1 size-3.5" /> Mark Received
-                              </Button>
-                            </TableCell>
-                          </TableRow>
-                        ))
-                      )}
-                    </TableBody>
-                  </Table>
-                </div>
-              </CardContent>
-            </Card>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
           )}
 
           {selectedTab === 'testimonials' && (
-            <Card className="shadow-sm border-0 ring-1 ring-foreground/5">
-              <div className="h-1 bg-gradient-to-r from-blue-500 to-purple-500" />
-              <CardHeader className="p-4 md:p-6">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                  <div>
-                    <CardTitle className="text-lg md:text-xl">Testimonial Management</CardTitle>
-                    <CardDescription className="text-sm">View, create, and manage client testimonials</CardDescription>
+            <div className="relative overflow-hidden rounded-2xl bg-white border border-slate-200/80 shadow-sm">
+              <div className="absolute top-0 right-0 w-56 h-56 bg-purple-100/40 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+              <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400" />
+              <div className="px-5 py-5 border-b border-slate-200 relative">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-gradient-to-br from-purple-500 to-pink-600 shadow-md">
+                      <MessageSquareQuote className="size-4 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-base font-semibold text-slate-900">Testimonial Management</h3>
+                      <p className="text-xs text-slate-500">View, create, and manage client testimonials</p>
+                    </div>
                   </div>
                   <Dialog open={createTestimonialOpen} onOpenChange={setCreateTestimonialOpen}>
                     <DialogTrigger asChild>
-                      <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0">
-                        <Plus className="mr-2 size-4" /> Add Testimonial
-                      </Button>
+                      <button className="h-9 px-4 rounded-lg text-xs font-semibold bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white shadow-md hover:shadow-lg transition-all duration-200 flex items-center gap-2 border-0">
+                        <Plus className="size-4" /> Add Testimonial
+                      </button>
                     </DialogTrigger>
-                      <DialogContent className="bg-white">
+                    <DialogContent className="bg-white border-slate-200 text-slate-900">
                       <DialogHeader>
-                        <DialogTitle className="text-gray-900">Create Testimonial</DialogTitle>
-                        <DialogDescription className="text-gray-500">Add a new client testimonial manually.</DialogDescription>
+                        <DialogTitle className="text-slate-900 flex items-center gap-2">
+                          <MessageSquareQuote className="size-5 text-purple-500" />
+                          Create Testimonial
+                        </DialogTitle>
+                        <DialogDescription className="text-slate-500">Add a new client testimonial manually.</DialogDescription>
                       </DialogHeader>
                       <div className="grid gap-4 py-4">
                         <div className="grid gap-2">
-                          <Label htmlFor="tAuthor" className="text-gray-700">Author Name</Label>
-                          <Input id="tAuthor" className="bg-white border-gray-300 text-gray-900 placeholder:text-gray-400 focus-visible:ring-blue-500" placeholder="Client name" value={newTestimonial.author} onChange={e => setNewTestimonial({...newTestimonial, author: e.target.value})} />
+                          <Label className="text-slate-700 text-sm font-medium">Author Name</Label>
+                          <Input className="bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-purple-500" placeholder="Client name" value={newTestimonial.author} onChange={e => setNewTestimonial({...newTestimonial, author: e.target.value})} />
                         </div>
                         <div className="grid gap-2">
-                          <Label htmlFor="tContent" className="text-gray-700">Testimonial</Label>
-                          <textarea
-                            id="tContent"
-                            className="flex min-h-[80px] w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:border-transparent"
-                            placeholder="What the client said..."
-                            value={newTestimonial.content}
-                            onChange={e => setNewTestimonial({...newTestimonial, content: e.target.value})}
-                          />
+                          <Label className="text-slate-700 text-sm font-medium">Testimonial</Label>
+                          <Textarea className="bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-purple-500 min-h-[80px]" placeholder="What the client said..." value={newTestimonial.content} onChange={e => setNewTestimonial({...newTestimonial, content: e.target.value})} />
                         </div>
                         <div className="grid grid-cols-2 gap-4">
                           <div className="grid gap-2">
-                            <Label htmlFor="tRating" className="text-gray-700">Rating (1-5)</Label>
-                            <Input id="tRating" className="bg-white border-gray-300 text-gray-900 focus-visible:ring-blue-500" type="number" min={1} max={5} value={newTestimonial.rating} onChange={e => setNewTestimonial({...newTestimonial, rating: Number(e.target.value)})} />
+                            <Label className="text-slate-700 text-sm font-medium">Rating (1-5)</Label>
+                            <Input className="bg-white border-slate-300 text-slate-900 focus-visible:ring-purple-500" type="number" min={1} max={5} value={newTestimonial.rating} onChange={e => setNewTestimonial({...newTestimonial, rating: Number(e.target.value)})} />
                           </div>
                           <div className="grid gap-2">
-                            <Label htmlFor="tLoan" className="text-gray-700">Loan Amount ($)</Label>
-                            <Input id="tLoan" className="bg-white border-gray-300 text-gray-900 placeholder:text-gray-400 focus-visible:ring-blue-500" type="number" placeholder="0" value={newTestimonial.loanAmount} onChange={e => setNewTestimonial({...newTestimonial, loanAmount: e.target.value})} />
+                            <Label className="text-slate-700 text-sm font-medium">Loan Amount ($)</Label>
+                            <Input className="bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-purple-500" type="number" placeholder="0" value={newTestimonial.loanAmount} onChange={e => setNewTestimonial({...newTestimonial, loanAmount: e.target.value})} />
                           </div>
                         </div>
                       </div>
                       <DialogFooter>
-                        <Button variant="outline" onClick={() => setCreateTestimonialOpen(false)} className="border-gray-300 text-gray-700">Cancel</Button>
-                        <Button onClick={handleCreateTestimonial} className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0">Create</Button>
+                        <button onClick={() => setCreateTestimonialOpen(false)} className="h-9 px-4 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-100 transition-all duration-200 border border-slate-300">Cancel</button>
+                        <button onClick={handleCreateTestimonial} className="h-9 px-4 rounded-lg text-xs font-semibold bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white transition-all duration-200 flex items-center gap-2 border-0 shadow-md">
+                          <Plus className="size-3.5" /> Create
+                        </button>
                       </DialogFooter>
                     </DialogContent>
                   </Dialog>
                 </div>
-              </CardHeader>
-              <CardContent className="p-0 md:p-0">
-                <div className="overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow className="border-t md:border-t-0">
-                        <TableHead className="px-4 md:px-6 py-3">Author</TableHead>
-                        <TableHead className="px-4 md:px-6 py-3 max-w-md">Content</TableHead>
-                        <TableHead className="px-4 md:px-6 py-3 text-center">Rating</TableHead>
-                        <TableHead className="px-4 md:px-6 py-3 text-right hidden sm:table-cell">Loan</TableHead>
-                        <TableHead className="px-4 md:px-6 py-3 text-right">Actions</TableHead>
+              </div>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="border-slate-200 hover:bg-transparent">
+                      <TableHead className="px-5 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wider">Author</TableHead>
+                      <TableHead className="px-5 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wider max-w-md">Content</TableHead>
+                      <TableHead className="px-5 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wider text-center">Rating</TableHead>
+                      <TableHead className="px-5 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right hidden sm:table-cell">Loan</TableHead>
+                      <TableHead className="px-5 py-3.5 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {testimonials.length === 0 ? (
+                      <TableRow>
+                        <TableCell colSpan={5} className="text-center text-slate-400 py-16">No testimonials found</TableCell>
                       </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {testimonials.length === 0 ? (
-                        <TableRow>
-                          <TableCell colSpan={5} className="text-center text-muted-foreground py-12">No testimonials found</TableCell>
-                        </TableRow>
-                      ) : (
-                        testimonials.map(t => (
-                          <TableRow key={t._id} className="hover:bg-muted/50 transition-colors">
-                            <TableCell className="px-4 md:px-6 py-3 font-medium">{t.author}</TableCell>
-                            <TableCell className="px-4 md:px-6 py-3 text-sm text-muted-foreground max-w-md truncate">{t.content}</TableCell>
-                            <TableCell className="px-4 md:px-6 py-3 text-center">
-                              <div className="flex items-center justify-center gap-0.5">
-                                {[1,2,3,4,5].map(s => (
-                                  <Star key={s} className={`size-3 ${s <= t.rating ? 'text-amber-400 fill-amber-400' : 'text-gray-200'}`} />
-                                ))}
+                    ) : (
+                      testimonials.map(t => (
+                        <TableRow key={t._id} className="border-slate-100 hover:bg-slate-50/80 transition-colors">
+                          <TableCell className="px-5 py-3.5">
+                            <div className="flex items-center gap-3">
+                              <div className="size-8 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shrink-0 shadow-sm">
+                                <span className="text-xs font-bold text-white">{t.author?.charAt(0)?.toUpperCase()}</span>
                               </div>
-                            </TableCell>
-                            <TableCell className="px-4 md:px-6 py-3 text-right text-sm hidden sm:table-cell">${t.loanAmount?.toLocaleString()}</TableCell>
-                            <TableCell className="px-4 md:px-6 py-3 text-right">
-                              <Button size="sm" variant="ghost" className="h-8 px-2 text-xs text-destructive hover:text-destructive" onClick={() => handleDeleteTestimonial(t._id)}>
-                                <Trash2 className="size-3.5" />
-                              </Button>
-                            </TableCell>
-                          </TableRow>
-                        ))
-                      )}
-                    </TableBody>
-                  </Table>
-                </div>
-              </CardContent>
-            </Card>
+                              <span className="text-sm font-semibold text-slate-800">{t.author}</span>
+                            </div>
+                          </TableCell>
+                          <TableCell className="px-5 py-3.5 text-sm text-slate-500 max-w-md truncate">&ldquo;{t.content}&rdquo;</TableCell>
+                          <TableCell className="px-5 py-3.5 text-center">
+                            <div className="flex items-center justify-center gap-0.5">
+                              {[1,2,3,4,5].map(s => (
+                                <Star key={s} className={`size-3.5 ${s <= t.rating ? 'text-amber-400 fill-amber-400' : 'text-slate-200'}`} />
+                              ))}
+                            </div>
+                          </TableCell>
+                          <TableCell className="px-5 py-3.5 text-right text-sm font-semibold text-emerald-600 hidden sm:table-cell">${t.loanAmount?.toLocaleString()}</TableCell>
+                          <TableCell className="px-5 py-3.5 text-right">
+                            <button onClick={() => handleDeleteTestimonial(t._id)} className="h-8 px-2.5 rounded-lg text-xs font-medium text-red-500 hover:bg-red-50 hover:text-red-600 transition-all duration-200 flex items-center gap-1.5 ml-auto">
+                              <Trash2 className="size-3.5" />
+                            </button>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
           )}
 
           {isSuperAdmin && selectedTab === 'admins' && (
-            <Card className="shadow-sm border-0 ring-1 ring-foreground/5">
-              <div className="h-1 bg-gradient-to-r from-red-500 to-pink-500" />
-              <CardHeader className="p-4 md:p-6">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div className="relative overflow-hidden rounded-2xl bg-white border border-slate-200/80 shadow-sm">
+              <div className="absolute top-0 right-0 w-56 h-56 bg-red-100/40 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+              <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-red-400 via-pink-400 to-rose-400" />
+              <div className="px-5 py-5 border-b border-slate-200 relative">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-gradient-to-br from-red-500 to-pink-600 shadow-md">
+                    <UserCog className="size-4 text-white" />
+                  </div>
                   <div>
-                    <CardTitle className="text-lg md:text-xl">Manage Admins</CardTitle>
-                    <CardDescription className="text-sm">Create new admin accounts</CardDescription>
+                    <h3 className="text-base font-semibold text-slate-900">Manage Admins</h3>
+                    <p className="text-xs text-slate-500">Create new admin accounts</p>
                   </div>
                 </div>
-              </CardHeader>
-              <CardContent className="p-4 md:p-6">
+              </div>
+              <div className="px-5 py-5">
                 <Dialog open={createAdminOpen} onOpenChange={setCreateAdminOpen}>
                   <DialogTrigger asChild>
-                    <Button className="bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white border-0"><Plus className="mr-2 size-4" /> Create New Admin</Button>
+                    <button className="h-10 px-5 rounded-xl text-sm font-semibold bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white shadow-md hover:shadow-lg transition-all duration-200 flex items-center gap-2 border-0">
+                      <Plus className="size-4" /> Create New Admin
+                    </button>
                   </DialogTrigger>
-                  <DialogContent>
+                  <DialogContent className="bg-white border-slate-200 text-slate-900">
                     <DialogHeader>
-                      <DialogTitle>Create Admin Account</DialogTitle>
-                      <DialogDescription>Fill in the details to create a new admin or super admin.</DialogDescription>
+                      <DialogTitle className="text-slate-900 flex items-center gap-2">
+                        <UserCog className="size-5 text-red-500" />
+                        Create Admin Account
+                      </DialogTitle>
+                      <DialogDescription className="text-slate-500">Fill in the details to create a new admin or super admin.</DialogDescription>
                     </DialogHeader>
                     <div className="grid gap-4 py-4">
                       <div className="grid gap-2">
-                        <Label htmlFor="adminName">Name</Label>
-                        <Input id="adminName" placeholder="Full name" value={newAdmin.name} onChange={e => setNewAdmin({...newAdmin, name: e.target.value})} />
+                        <Label className="text-slate-700 text-sm font-medium">Name</Label>
+                        <Input className="bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-red-500" placeholder="Full name" value={newAdmin.name} onChange={e => setNewAdmin({...newAdmin, name: e.target.value})} />
                       </div>
                       <div className="grid gap-2">
-                        <Label htmlFor="adminEmail">Email</Label>
-                        <Input id="adminEmail" type="email" placeholder="admin@example.com" value={newAdmin.email} onChange={e => setNewAdmin({...newAdmin, email: e.target.value})} />
+                        <Label className="text-slate-700 text-sm font-medium">Email</Label>
+                        <Input className="bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-red-500" type="email" placeholder="admin@example.com" value={newAdmin.email} onChange={e => setNewAdmin({...newAdmin, email: e.target.value})} />
                       </div>
                       <div className="grid gap-2">
-                        <Label htmlFor="adminPassword">Password</Label>
-                        <Input id="adminPassword" type="password" placeholder="Password" value={newAdmin.password} onChange={e => setNewAdmin({...newAdmin, password: e.target.value})} />
+                        <Label className="text-slate-700 text-sm font-medium">Password</Label>
+                        <Input className="bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-red-500" type="password" placeholder="Password" value={newAdmin.password} onChange={e => setNewAdmin({...newAdmin, password: e.target.value})} />
                       </div>
                       <div className="grid gap-2">
-                        <Label htmlFor="adminRole">Role</Label>
+                        <Label className="text-slate-700 text-sm font-medium">Role</Label>
                         <Select value={newAdmin.role} onValueChange={value => setNewAdmin({...newAdmin, role: value})}>
-                          <SelectTrigger id="adminRole"><SelectValue placeholder="Select role" /></SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="admin">Admin</SelectItem>
-                            <SelectItem value="superadmin">Super Admin</SelectItem>
+                          <SelectTrigger className="bg-white border-slate-300 text-slate-900 focus-visible:ring-red-500">
+                            <SelectValue placeholder="Select role" />
+                          </SelectTrigger>
+                          <SelectContent className="bg-white border-slate-200 text-slate-900">
+                            <SelectItem value="admin" className="text-slate-900 focus:bg-red-50">Admin</SelectItem>
+                            <SelectItem value="superadmin" className="text-slate-900 focus:bg-red-50">Super Admin</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
                     </div>
                     <DialogFooter>
-                      <Button variant="outline" onClick={() => setCreateAdminOpen(false)}>Cancel</Button>
-                      <Button onClick={handleCreateAdmin} className="bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white border-0">Create Admin</Button>
+                      <button onClick={() => setCreateAdminOpen(false)} className="h-9 px-4 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-100 transition-all duration-200 border border-slate-300">Cancel</button>
+                      <button onClick={handleCreateAdmin} className="h-9 px-4 rounded-lg text-xs font-semibold bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white transition-all duration-200 flex items-center gap-2 border-0 shadow-md">
+                        <UserCog className="size-3.5" /> Create Admin
+                      </button>
                     </DialogFooter>
                   </DialogContent>
                 </Dialog>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           )}
         </div>
       </SidebarInset>
 
       <Dialog open={addFundsOpen} onOpenChange={setAddFundsOpen}>
-        <DialogContent>
+        <DialogContent className="bg-white border-slate-200 text-slate-900">
           <DialogHeader>
-            <DialogTitle>Add Funds</DialogTitle>
-            <DialogDescription>Enter the amount to credit the user's account.</DialogDescription>
+            <DialogTitle className="text-slate-900 flex items-center gap-2">
+              <DollarSign className="size-5 text-emerald-500" />
+              Add Funds
+            </DialogTitle>
+            <DialogDescription className="text-slate-500">Enter the amount to credit the user's account.</DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
-              <Label htmlFor="fundsAmount">Amount ($)</Label>
-              <Input id="fundsAmount" type="number" placeholder="0.00" value={addFundsAmount} onChange={e => setAddFundsAmount(e.target.value)} />
+              <Label className="text-slate-700 text-sm font-medium">Amount ($)</Label>
+              <Input className="bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-emerald-500" type="number" placeholder="0.00" value={addFundsAmount} onChange={e => setAddFundsAmount(e.target.value)} />
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setAddFundsOpen(false)}>Cancel</Button>
-            <Button onClick={handleAddFunds} className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white border-0">Add Funds</Button>
+            <button onClick={() => setAddFundsOpen(false)} className="h-9 px-4 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-100 transition-all duration-200 border border-slate-300">Cancel</button>
+            <button onClick={handleAddFunds} className="h-9 px-4 rounded-lg text-xs font-semibold bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white transition-all duration-200 flex items-center gap-2 border-0 shadow-md">
+              <DollarSign className="size-3.5" /> Add Funds
+            </button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
       {/* Send Email Dialog */}
       <Dialog open={emailDialogOpen} onOpenChange={setEmailDialogOpen}>
-        <DialogContent className="sm:max-w-lg">
+        <DialogContent className="bg-white border-slate-200 text-slate-900 sm:max-w-lg">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <Mail className="size-5 text-blue-600" />
+            <DialogTitle className="text-slate-900 flex items-center gap-2">
+              <Mail className="size-5 text-blue-500" />
               Send Email to {emailTarget?.name || 'User'}
             </DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="text-slate-500">
               Compose an email to {emailTarget?.email || 'the user'}. They will receive it in their inbox.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
-              <Label htmlFor="emailSubject">Subject</Label>
+              <Label className="text-slate-700 text-sm font-medium">Subject</Label>
               <Input
-                id="emailSubject"
+                className="bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-blue-500"
                 placeholder="e.g. Loan Application Update"
                 value={emailSubject}
                 onChange={e => setEmailSubject(e.target.value)}
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="emailMessage">Message</Label>
+              <Label className="text-slate-700 text-sm font-medium">Message</Label>
               <Textarea
-                id="emailMessage"
+                className="bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-blue-500"
                 rows={6}
                 placeholder="Write your message here..."
                 value={emailMessage}
@@ -718,20 +788,18 @@ const AdminDashboard = () => {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setEmailDialogOpen(false)} disabled={sendingEmail}>
-              Cancel
-            </Button>
-            <Button
+            <button onClick={() => setEmailDialogOpen(false)} disabled={sendingEmail} className="h-9 px-4 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-100 transition-all duration-200 border border-slate-300 disabled:opacity-50">Cancel</button>
+            <button
               onClick={handleSendEmail}
               disabled={!emailSubject || !emailMessage || sendingEmail}
-              className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white border-0"
+              className="h-9 px-4 rounded-lg text-xs font-semibold bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white transition-all duration-200 flex items-center gap-2 border-0 shadow-md disabled:opacity-50"
             >
               {sendingEmail ? (
-                <><Loader2 className="mr-2 size-4 animate-spin" /> Sending...</>
+                <><Loader2 className="size-3.5 animate-spin" /> Sending...</>
               ) : (
-                <><Send className="mr-2 size-4" /> Send Email</>
+                <><Send className="size-3.5" /> Send Email</>
               )}
-            </Button>
+            </button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
