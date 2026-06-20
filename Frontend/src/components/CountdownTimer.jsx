@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Clock } from 'lucide-react';
 
 const CountdownTimer = ({ targetDate }) => {
   const [timeLeft, setTimeLeft] = useState({
@@ -30,28 +32,30 @@ const CountdownTimer = ({ targetDate }) => {
     return () => clearInterval(timer);
   }, [targetDate]);
 
+  const items = [
+    { label: 'Days', value: timeLeft.days },
+    { label: 'Hours', value: timeLeft.hours },
+    { label: 'Minutes', value: timeLeft.minutes },
+    { label: 'Seconds', value: timeLeft.seconds },
+  ];
+
   return (
-    <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg p-6 text-white">
-      <h3 className="text-xl font-bold mb-4 text-center">Withdrawal Available In:</h3>
-      <div className="grid grid-cols-4 gap-4 text-center">
-        <div>
-          <div className="text-3xl font-bold">{timeLeft.days}</div>
-          <div className="text-sm">Days</div>
+    <Card className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground border-0 shadow-sm">
+      <CardContent className="p-4 md:p-6">
+        <div className="flex items-center gap-2 mb-4">
+          <Clock className="size-4 opacity-80" />
+          <span className="text-sm font-medium opacity-90">Withdrawal Available In:</span>
         </div>
-        <div>
-          <div className="text-3xl font-bold">{timeLeft.hours}</div>
-          <div className="text-sm">Hours</div>
+        <div className="grid grid-cols-4 gap-2 text-center">
+          {items.map(item => (
+            <div key={item.label} className="rounded-lg bg-black/10 backdrop-blur-sm p-2 md:p-3">
+              <div className="text-xl md:text-2xl font-bold tabular-nums">{String(item.value).padStart(2, '0')}</div>
+              <div className="text-[10px] md:text-xs opacity-80 mt-0.5">{item.label}</div>
+            </div>
+          ))}
         </div>
-        <div>
-          <div className="text-3xl font-bold">{timeLeft.minutes}</div>
-          <div className="text-sm">Minutes</div>
-        </div>
-        <div>
-          <div className="text-3xl font-bold">{timeLeft.seconds}</div>
-          <div className="text-sm">Seconds</div>
-        </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 

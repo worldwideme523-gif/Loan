@@ -5,6 +5,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import AdminRoute from './components/AdminRoute';
 import ErrorBoundary from './components/ErrorBoundary';
 import NotificationContainer from './components/NotificationContainer';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import './App.css';
 
 // Public Pages
@@ -24,10 +25,11 @@ function App() {
   return (
     <ErrorBoundary>
       <NotificationProvider>
-        <Router>
-          <AuthProvider>
-            <NotificationContainer />
-            <Routes>
+        <TooltipProvider>
+          <Router>
+            <AuthProvider>
+              <NotificationContainer />
+              <Routes>
               {/* Public Routes */}
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
@@ -54,6 +56,7 @@ function App() {
             </Routes>
           </AuthProvider>
         </Router>
+        </TooltipProvider>
       </NotificationProvider>
     </ErrorBoundary>
   );

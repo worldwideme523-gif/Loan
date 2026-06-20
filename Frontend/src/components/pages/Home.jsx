@@ -116,7 +116,7 @@ const Home = () => {
   const testimonialsInView = useInView(testimonialsRef, { once: true });
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
+    <div className="landing-page min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
       {/* Navigation */}
       <nav className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-sm sticky top-0 z-50 transition-colors">
         <div className="container mx-auto px-6 py-4">
