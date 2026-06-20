@@ -18,7 +18,7 @@ export function AppSidebar({ items, user, role, activeTab, onNavigate, onLogout,
     <Sidebar
       variant="sidebar"
       collapsible="icon"
-      className="border-r border-slate-700/50 bg-slate-900 text-white [--sidebar-accent:transparent] [--sidebar-accent-foreground:inherit]"
+      className="border-r border-slate-700/50 bg-slate-900 text-white [--sidebar-accent:transparent] [--sidebar-accent-foreground:inherit] [--sidebar-background:#0f172a] group-data-[collapsible=icon]:p-1.5"
       {...props}
     >
       {/* Brand Header */}
@@ -27,7 +27,7 @@ export function AppSidebar({ items, user, role, activeTab, onNavigate, onLogout,
           <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-500 to-teal-500 shadow-lg shadow-emerald-500/20">
             <span className="text-sm font-bold text-white">S</span>
           </div>
-          <div className="min-w-0">
+          <div className="min-w-0 group-data-[collapsible=icon]:hidden">
             <p className="text-sm font-semibold text-white truncate">Velaris</p>
             <p className="text-[11px] text-slate-400 truncate leading-tight">Loan Platform</p>
           </div>
@@ -87,7 +87,7 @@ export function AppSidebar({ items, user, role, activeTab, onNavigate, onLogout,
               {user?.name?.charAt(0)?.toUpperCase() || 'U'}
             </span>
           </div>
-          <div className="min-w-0 flex-1">
+          <div className="min-w-0 flex-1 group-data-[collapsible=icon]:hidden">
             <p className="text-sm font-medium text-white truncate">{user?.name || 'User'}</p>
             <p className="text-[11px] text-slate-400 truncate leading-tight">{role}</p>
           </div>
