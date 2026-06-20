@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2, DollarSign, CalendarDays, Percent, ArrowRight, CheckCircle2, Calculator, Banknote, PiggyBank, TrendingUp, Sparkles } from 'lucide-react';
+import { Loader2, DollarSign, CalendarDays, ArrowRight, CheckCircle2, Calculator, Banknote, PiggyBank, TrendingUp, Sparkles } from 'lucide-react';
 
 const termOptions = [
   { value: '6', label: 'Short Term', subtitle: '6 months', rate: '7%', color: 'from-emerald-500 to-teal-500', icon: TrendingUp },
@@ -207,20 +207,19 @@ const LoanCalculator = () => {
 
               {/* Main result cards */}
               <div className="grid grid-cols-2 gap-3">
-                <div className="relative rounded-xl bg-gradient-to-br from-emerald-500/20 to-emerald-600/10 border border-emerald-500/20 p-4 flex flex-col">
+                <div className="rounded-xl bg-gradient-to-br from-emerald-500/20 to-emerald-600/10 border border-emerald-500/20 p-4 flex flex-col">
                   <span className="text-xs text-emerald-300/70 font-medium">Interest Rate</span>
                   <span className="text-xl font-bold text-emerald-300 mt-1">{calculated.rate}%</span>
-                  <Percent className="absolute bottom-3 right-3 size-8 text-emerald-500/10" />
                 </div>
-                <div className="relative rounded-xl bg-gradient-to-br from-amber-500/20 to-amber-600/10 border border-amber-500/20 p-4 flex flex-col">
+                <div className="rounded-xl bg-gradient-to-br from-amber-500/20 to-amber-600/10 border border-amber-500/20 p-4 flex flex-col">
                   <span className="text-xs text-amber-300/70 font-medium">Total Interest</span>
                   <span className="text-xl font-bold text-amber-300 mt-1">{formatCurrency(calculated.interest)}</span>
                 </div>
-                <div className="relative rounded-xl bg-gradient-to-br from-blue-500/20 to-blue-600/10 border border-blue-500/20 p-4 flex flex-col">
+                <div className="rounded-xl bg-gradient-to-br from-blue-500/20 to-blue-600/10 border border-blue-500/20 p-4 flex flex-col">
                   <span className="text-xs text-blue-300/70 font-medium">Total Repayment</span>
                   <span className="text-xl font-bold text-blue-300 mt-1">{formatCurrency(calculated.totalRepayment)}</span>
                 </div>
-                <div className="relative rounded-xl bg-gradient-to-br from-violet-500/20 to-violet-600/10 border border-violet-500/20 p-4 flex flex-col">
+                <div className="rounded-xl bg-gradient-to-br from-violet-500/20 to-violet-600/10 border border-violet-500/20 p-4 flex flex-col">
                   <span className="text-xs text-violet-300/70 font-medium">Monthly Payment</span>
                   <span className="text-xl font-bold text-violet-300 mt-1">{formatCurrency(calculated.monthlyPayment)}</span>
                 </div>
