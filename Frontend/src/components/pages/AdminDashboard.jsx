@@ -486,21 +486,21 @@ const AdminDashboard = () => {
                         <Plus className="mr-2 size-4" /> Add Testimonial
                       </Button>
                     </DialogTrigger>
-                    <DialogContent>
+                      <DialogContent className="bg-white">
                       <DialogHeader>
-                        <DialogTitle>Create Testimonial</DialogTitle>
-                        <DialogDescription>Add a new client testimonial manually.</DialogDescription>
+                        <DialogTitle className="text-gray-900">Create Testimonial</DialogTitle>
+                        <DialogDescription className="text-gray-500">Add a new client testimonial manually.</DialogDescription>
                       </DialogHeader>
                       <div className="grid gap-4 py-4">
                         <div className="grid gap-2">
-                          <Label htmlFor="tAuthor">Author Name</Label>
-                          <Input id="tAuthor" placeholder="Client name" value={newTestimonial.author} onChange={e => setNewTestimonial({...newTestimonial, author: e.target.value})} />
+                          <Label htmlFor="tAuthor" className="text-gray-700">Author Name</Label>
+                          <Input id="tAuthor" className="bg-white border-gray-300 text-gray-900 placeholder:text-gray-400 focus-visible:ring-blue-500" placeholder="Client name" value={newTestimonial.author} onChange={e => setNewTestimonial({...newTestimonial, author: e.target.value})} />
                         </div>
                         <div className="grid gap-2">
-                          <Label htmlFor="tContent">Testimonial</Label>
+                          <Label htmlFor="tContent" className="text-gray-700">Testimonial</Label>
                           <textarea
                             id="tContent"
-                            className="flex min-h-[80px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                            className="flex min-h-[80px] w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:border-transparent"
                             placeholder="What the client said..."
                             value={newTestimonial.content}
                             onChange={e => setNewTestimonial({...newTestimonial, content: e.target.value})}
@@ -508,17 +508,17 @@ const AdminDashboard = () => {
                         </div>
                         <div className="grid grid-cols-2 gap-4">
                           <div className="grid gap-2">
-                            <Label htmlFor="tRating">Rating (1-5)</Label>
-                            <Input id="tRating" type="number" min={1} max={5} value={newTestimonial.rating} onChange={e => setNewTestimonial({...newTestimonial, rating: Number(e.target.value)})} />
+                            <Label htmlFor="tRating" className="text-gray-700">Rating (1-5)</Label>
+                            <Input id="tRating" className="bg-white border-gray-300 text-gray-900 focus-visible:ring-blue-500" type="number" min={1} max={5} value={newTestimonial.rating} onChange={e => setNewTestimonial({...newTestimonial, rating: Number(e.target.value)})} />
                           </div>
                           <div className="grid gap-2">
-                            <Label htmlFor="tLoan">Loan Amount ($)</Label>
-                            <Input id="tLoan" type="number" placeholder="0" value={newTestimonial.loanAmount} onChange={e => setNewTestimonial({...newTestimonial, loanAmount: e.target.value})} />
+                            <Label htmlFor="tLoan" className="text-gray-700">Loan Amount ($)</Label>
+                            <Input id="tLoan" className="bg-white border-gray-300 text-gray-900 placeholder:text-gray-400 focus-visible:ring-blue-500" type="number" placeholder="0" value={newTestimonial.loanAmount} onChange={e => setNewTestimonial({...newTestimonial, loanAmount: e.target.value})} />
                           </div>
                         </div>
                       </div>
                       <DialogFooter>
-                        <Button variant="outline" onClick={() => setCreateTestimonialOpen(false)}>Cancel</Button>
+                        <Button variant="outline" onClick={() => setCreateTestimonialOpen(false)} className="border-gray-300 text-gray-700">Cancel</Button>
                         <Button onClick={handleCreateTestimonial} className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0">Create</Button>
                       </DialogFooter>
                     </DialogContent>
