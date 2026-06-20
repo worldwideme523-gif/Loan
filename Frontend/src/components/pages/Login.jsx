@@ -30,9 +30,9 @@ const Login = () => {
       <div className="absolute top-6 left-6 right-6 flex justify-between items-center">
         <div className="text-3xl font-bold text-white flex items-center gap-2">
           <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
-            <span className="text-blue-600 font-bold">S</span>
+            <span className="text-blue-600 font-bold">V</span>
           </div>
-          Sedgwiick
+          Velaris
         </div>
         <Link
           to="/"

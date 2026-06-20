@@ -91,7 +91,7 @@ const Home = () => {
               <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center shadow-md">
                 <span className="text-white font-bold text-lg">S</span>
               </div>
-              <div className="text-3xl font-bold text-blue-600">Sedgwiick</div>
+              <div className="text-3xl font-bold text-blue-600">Velaris</div>
             </div>
             <div className="flex items-center gap-4">
               <Link to="/login" className="text-gray-600 hover:text-blue-600 transition">
@@ -241,7 +241,7 @@ const Home = () => {
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-10">
         <div className="container mx-auto px-6 text-center">
-          <p>&copy; 2026 Sedgwick. All rights reserved.</p>
+          <p>&copy; 2026 Velaris. All rights reserved.</p>
           <p className="text-sm text-gray-400 mt-2">Built for financial freedom. Secure, transparent, fast.</p>
         </div>
       </footer>
