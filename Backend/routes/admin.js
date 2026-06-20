@@ -9,7 +9,8 @@ import {
   deleteUser,
   createAdmin,
   getRepaymentRequests,
-  markRepaymentReceived
+  markRepaymentReceived,
+  adminSendEmailToUser
 } from '../controller/adminController.js';
 import {
   getAllTestimonials,
@@ -34,6 +35,9 @@ router.post('/repayment-received/:requestId', markRepaymentReceived);
 router.get('/testimonials', getAllTestimonials);
 router.post('/testimonials', adminCreateTestimonial);
 router.delete('/testimonials/:id', deleteTestimonial);
+
+// Send email to user
+router.post('/send-email', adminSendEmailToUser);
 
 // Super admin only
 router.delete('/user/:userId', superAdmin, deleteUser);

@@ -187,7 +187,7 @@ const Home = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.65, duration: 0.7 }}
-            className="flex flex-col sm:flex-row items-center gap-5 sm:gap-6"
+            className="flex flex-col sm:flex-row items-center gap-5 mt-5 sm:gap-6"
           >
             <Link
               to="/register"
@@ -281,12 +281,27 @@ const Home = () => {
         initial="hidden"
         animate={calculatorInView ? "visible" : "hidden"}
         variants={fadeInUp}
-        className="py-16 bg-white"
+        className="py-20 sm:py-24 bg-gradient-to-b from-slate-950 via-blue-950 to-indigo-950 relative overflow-hidden"
       >
-        <div className="container mx-auto px-6">
-          <div className="max-w-2xl mx-auto">
+        {/* Background decoration */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-500/5 via-transparent to-transparent" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-500/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-500/20 to-transparent" />
+
+        <div className="container mx-auto px-6 relative">
+          <motion.div variants={fadeInUp} className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 bg-blue-500/10 text-blue-300 px-4 py-1.5 rounded-full text-sm font-medium mb-4 border border-blue-400/20">
+              <Calculator className="size-4" />
+              Loan Calculator
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">Plan Your Loan</h2>
+            <p className="text-lg text-blue-200/60 max-w-2xl mx-auto">
+              See exactly what you'll pay with our transparent calculator. No hidden fees, no surprises.
+            </p>
+          </motion.div>
+          <motion.div variants={fadeInUp} className="max-w-2xl mx-auto">
             <LoanCalculator />
-          </div>
+          </motion.div>
         </div>
       </motion.section>
 

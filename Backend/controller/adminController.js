@@ -58,17 +58,49 @@ export const approveLoan = async (req, res, next) => {
     application.status = 'approved';
     await application.save();
 
-    // Send email notification
-   // Send email notification (but don't fail approval if email fails)
+    // Send email notification with professional HTML
     try {
       await sendEmail({
         to: user.email,
-        subject: 'Loan Application Approved',
-        text: `Dear ${user.name},\n\nYour loan application for ₦${application.amount.toLocaleString()} has been approved!\n\nFunds have been added to your account. They will be available after the standard processing period.\n\nThank you for choosing our platform.`
+        subject: 'Loan Application Approved - Funds Credited',
+        html: `
+          <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #f8fafc; border-radius: 16px; overflow: hidden;">
+            <div style="background: linear-gradient(135deg, #059669 0%, #10b981 50%, #34d399 100%); padding: 32px; text-align: center;">
+              <div style="font-size: 48px; margin-bottom: 8px;">✅</div>
+              <h1 style="color: white; margin: 0; font-size: 24px; font-weight: 700;">Loan Approved!</h1>
+              <p style="color: rgba(255,255,255,0.8); margin: 8px 0 0; font-size: 14px;">Congratulations, your loan has been approved</p>
+            </div>
+            <div style="padding: 32px;">
+              <p style="color: #0f172a; font-size: 16px; line-height: 1.6;">Dear ${user.name},</p>
+              <p style="color: #475569; font-size: 14px; line-height: 1.6;">We are pleased to inform you that your loan application for <strong style="color: #059669;">$${application.amount.toLocaleString()}</strong> has been <strong style="color: #059669;">approved</strong>!</p>
+              <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 20px; margin: 20px 0;">
+                <table style="width: 100%; border-collapse: collapse;">
+                  <tr>
+                    <td style="padding: 8px 0; color: #475569; font-size: 14px;">Approved Amount</td>
+                    <td style="padding: 8px 0; color: #059669; font-size: 14px; font-weight: 700; text-align: right;">$${application.amount.toLocaleString()}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 8px 0; color: #475569; font-size: 14px; border-top: 1px solid #bbf7d0;">Term</td>
+                    <td style="padding: 8px 0; color: #0f172a; font-size: 14px; text-align: right; border-top: 1px solid #bbf7d0;">${application.termMonths} months</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 8px 0; color: #475569; font-size: 14px; border-top: 1px solid #bbf7d0;">Status</td>
+                    <td style="padding: 8px 0; color: #059669; font-size: 14px; font-weight: 600; text-align: right; border-top: 1px solid #bbf7d0;">Funds Credited ✅</td>
+                  </tr>
+                </table>
+              </div>
+              <p style="color: #475569; font-size: 14px; line-height: 1.6;">Funds have been added to your account. They will be available for withdrawal after the standard 90-day processing period.</p>
+              <p style="color: #475569; font-size: 14px; line-height: 1.6;">Please log in to your dashboard to view your loan details and track your withdrawal availability.</p>
+              <div style="text-align: center; margin-top: 24px;">
+                <a href="http://localhost:5174/dashboard" style="display: inline-block; background: linear-gradient(135deg, #059669, #10b981); color: white; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-size: 15px; font-weight: 600; box-shadow: 0 4px 14px rgba(16,185,129,0.4);">Go to Dashboard</a>
+              </div>
+              <p style="color: #94a3b8; font-size: 12px; margin-top: 24px; text-align: center;">Best regards,<br/>The Loans Team</p>
+            </div>
+          </div>
+        `
       });
     } catch (emailError) {
       console.error('Email sending failed, but loan approved:', emailError.message);
-      // Continue – the approval is already successful
     }
 
     res.json({ message: 'Loan approved and account credited successfully', loan });
@@ -96,8 +128,23 @@ export const denyLoan = async (req, res, next) => {
     if (user) {
       await sendEmail({
         to: user.email,
-        subject: 'Loan Application Denied',
-        text: `Dear ${user.name},\n\nWe regret to inform you that your loan application has been denied.\n\nPlease contact support for more information.`
+        subject: 'Loan Application Update',
+        html: `
+          <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #f8fafc; border-radius: 16px; overflow: hidden;">
+            <div style="background: linear-gradient(135deg, #dc2626 0%, #ef4444 50%, #f87171 100%); padding: 32px; text-align: center;">
+              <div style="font-size: 48px; margin-bottom: 8px;">📋</div>
+              <h1 style="color: white; margin: 0; font-size: 24px; font-weight: 700;">Application Update</h1>
+              <p style="color: rgba(255,255,255,0.8); margin: 8px 0 0; font-size: 14px;">Regarding your recent loan application</p>
+            </div>
+            <div style="padding: 32px;">
+              <p style="color: #0f172a; font-size: 16px; line-height: 1.6;">Dear ${user.name},</p>
+              <p style="color: #475569; font-size: 14px; line-height: 1.6;">After careful review, we regret to inform you that your loan application for <strong>$${application.amount.toLocaleString()}</strong> has been <strong style="color: #dc2626;">denied</strong> at this time.</p>
+              <p style="color: #475569; font-size: 14px; line-height: 1.6;">If you have any questions or would like more information about this decision, please don't hesitate to contact our support team.</p>
+              <p style="color: #475569; font-size: 14px; line-height: 1.6;">We encourage you to reapply in the future once the requirements are met.</p>
+              <p style="color: #94a3b8; font-size: 12px; margin-top: 24px; text-align: center;">Best regards,<br/>The Loans Team</p>
+            </div>
+          </div>
+        `
       });
     }
 
@@ -215,6 +262,48 @@ export const markRepaymentReceived = async (req, res, next) => {
     }
 
     res.json({ message: 'Repayment marked as received' });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Admin sends email to a user
+export const adminSendEmailToUser = async (req, res, next) => {
+  try {
+    const { userId, subject, message } = req.body;
+    if (!userId || !subject || !message) {
+      return res.status(400).json({ message: 'userId, subject, and message are required' });
+    }
+
+    const targetUser = await User.findById(userId);
+    if (!targetUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const adminName = req.user.name;
+
+    await sendEmail({
+      to: targetUser.email,
+      subject: subject,
+      html: `
+        <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #f8fafc; border-radius: 16px; overflow: hidden;">
+          <div style="background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #06b6d4 100%); padding: 32px; text-align: center;">
+            <div style="font-size: 48px; margin-bottom: 8px;">📬</div>
+            <h1 style="color: white; margin: 0; font-size: 24px; font-weight: 700;">Loan Platform Update</h1>
+          </div>
+          <div style="padding: 32px;">
+            <p style="color: #0f172a; font-size: 16px; line-height: 1.6;">Dear ${targetUser.name},</p>
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin: 16px 0;">
+              <p style="color: #475569; font-size: 14px; line-height: 1.6; margin: 0;">${message}</p>
+            </div>
+            <p style="color: #475569; font-size: 14px; line-height: 1.6;">If you have any questions, please don't hesitate to reach out to us.</p>
+            <p style="color: #94a3b8; font-size: 12px; margin-top: 24px; text-align: center;">Best regards,<br/>${adminName}<br/>The Loans Team</p>
+          </div>
+        </div>
+      `
+    });
+
+    res.json({ message: `Email sent to ${targetUser.name} successfully` });
   } catch (error) {
     next(error);
   }

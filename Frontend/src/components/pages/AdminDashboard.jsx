@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -16,7 +17,7 @@ import { AppSidebar } from '@/components/app-sidebar';
 import { SiteHeader } from '@/components/site-header';
 import { ChartBarGroup } from '@/components/chart-bar';
 import { ChartDonut } from '@/components/chart-pie';
-import { Users, FileText, DollarSign, CheckCircle, XCircle, Plus, Trash2, UserCog, Banknote, ClipboardList, TrendingUp, Activity, PieChart, MessageSquareQuote, Star } from 'lucide-react';
+import { Users, FileText, DollarSign, CheckCircle, XCircle, Plus, Trash2, UserCog, Banknote, ClipboardList, TrendingUp, Activity, PieChart, MessageSquareQuote, Star, Mail, Loader2, Send } from 'lucide-react';
 
 const AdminDashboard = () => {
   const { user, logout, isSuperAdmin } = useAuth();
@@ -34,6 +35,11 @@ const AdminDashboard = () => {
   const [addFundsOpen, setAddFundsOpen] = useState(false);
   const [createAdminOpen, setCreateAdminOpen] = useState(false);
   const [createTestimonialOpen, setCreateTestimonialOpen] = useState(false);
+  const [emailDialogOpen, setEmailDialogOpen] = useState(false);
+  const [emailTarget, setEmailTarget] = useState(null);
+  const [emailSubject, setEmailSubject] = useState('');
+  const [emailMessage, setEmailMessage] = useState('');
+  const [sendingEmail, setSendingEmail] = useState(false);
 
   useEffect(() => {
     fetchUsers();
@@ -145,6 +151,32 @@ const AdminDashboard = () => {
       fetchRepayments();
       fetchUsers();
     } catch (err) { setMessage(err.response?.data?.message); }
+  };
+
+  const openEmailDialog = (targetUser) => {
+    setEmailTarget(targetUser);
+    setEmailSubject('');
+    setEmailMessage('');
+    setEmailDialogOpen(true);
+  };
+
+  const handleSendEmail = async () => {
+    if (!emailTarget || !emailSubject || !emailMessage) return;
+    setSendingEmail(true);
+    try {
+      await axiosInstance.post('/api/admin/send-email', {
+        userId: emailTarget._id,
+        subject: emailSubject,
+        message: emailMessage
+      });
+      setMessage(`Email sent to ${emailTarget.name}`);
+      setEmailDialogOpen(false);
+      setEmailTarget(null);
+    } catch (err) {
+      setMessage(err.response?.data?.message || 'Failed to send email');
+    } finally {
+      setSendingEmail(false);
+    }
   };
 
   const handleCreateAdmin = async () => {
@@ -339,6 +371,9 @@ const AdminDashboard = () => {
                               </TableCell>
                               <TableCell className="px-4 md:px-6 py-3 text-right">
                                 <div className="flex items-center justify-end gap-1.5">
+                                  <Button size="sm" variant="ghost" className="h-8 px-2 text-xs text-blue-600 hover:text-blue-700 hover:bg-blue-50" onClick={() => openEmailDialog(u)}>
+                                    <Mail className="mr-1 size-3.5" /> <span className="hidden xs:inline">Email</span>
+                                  </Button>
                                   <Button size="sm" variant="ghost" className="h-8 px-2 text-xs" onClick={() => openAddFunds(u._id)}>
                                     <DollarSign className="mr-1 size-3.5" /> <span className="hidden xs:inline">Funds</span>
                                   </Button>
@@ -402,6 +437,9 @@ const AdminDashboard = () => {
                             <TableCell className="px-4 md:px-6 py-3 text-sm text-muted-foreground hidden md:table-cell">{new Date(app.createdAt).toLocaleDateString()}</TableCell>
                             <TableCell className="px-4 md:px-6 py-3 text-right">
                               <div className="flex items-center justify-end gap-1.5">
+                                <Button size="sm" variant="ghost" className="h-8 px-2 text-xs text-blue-600 hover:text-blue-700 hover:bg-blue-50" onClick={() => openEmailDialog({ _id: app.userId?._id, name: app.userId?.name || 'Applicant', email: app.userId?.email })}>
+                                  <Mail className="mr-1 size-3.5" /> <span className="hidden xs:inline">Email</span>
+                                </Button>
                                 <Button size="sm" variant="ghost" className="h-8 px-2 text-xs text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50" onClick={() => handleApproveLoan(app._id)}>
                                   <CheckCircle className="mr-1 size-3.5" /> Approve
                                 </Button>
@@ -642,6 +680,58 @@ const AdminDashboard = () => {
           <DialogFooter>
             <Button variant="outline" onClick={() => setAddFundsOpen(false)}>Cancel</Button>
             <Button onClick={handleAddFunds} className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white border-0">Add Funds</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Send Email Dialog */}
+      <Dialog open={emailDialogOpen} onOpenChange={setEmailDialogOpen}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Mail className="size-5 text-blue-600" />
+              Send Email to {emailTarget?.name || 'User'}
+            </DialogTitle>
+            <DialogDescription>
+              Compose an email to {emailTarget?.email || 'the user'}. They will receive it in their inbox.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="emailSubject">Subject</Label>
+              <Input
+                id="emailSubject"
+                placeholder="e.g. Loan Application Update"
+                value={emailSubject}
+                onChange={e => setEmailSubject(e.target.value)}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="emailMessage">Message</Label>
+              <Textarea
+                id="emailMessage"
+                rows={6}
+                placeholder="Write your message here..."
+                value={emailMessage}
+                onChange={e => setEmailMessage(e.target.value)}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEmailDialogOpen(false)} disabled={sendingEmail}>
+              Cancel
+            </Button>
+            <Button
+              onClick={handleSendEmail}
+              disabled={!emailSubject || !emailMessage || sendingEmail}
+              className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white border-0"
+            >
+              {sendingEmail ? (
+                <><Loader2 className="mr-2 size-4 animate-spin" /> Sending...</>
+              ) : (
+                <><Send className="mr-2 size-4" /> Send Email</>
+              )}
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
