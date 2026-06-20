@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion, useInView } from "framer-motion";
 import LoanCalculator from "../LoanCalculator";
-import { DollarSign, Clock, Shield, Users, ChevronLeft, ChevronRight, Star, MessageSquareQuote } from "lucide-react";
+import { DollarSign, Clock, Shield, Users, ChevronLeft, ChevronRight, Star, MessageSquareQuote, Calculator } from "lucide-react";
 import axiosInstance from "../../config/axios";
 import { useAuth } from '../../contexts/AuthContext';
 import TestimonialForm from '../../components/TestimonialForm';
