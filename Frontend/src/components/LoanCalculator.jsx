@@ -207,21 +207,21 @@ const LoanCalculator = () => {
 
               {/* Main result cards */}
               <div className="grid grid-cols-2 gap-3">
-                <div className="rounded-xl bg-gradient-to-br from-emerald-500/20 to-emerald-600/10 border border-emerald-500/20 p-4 flex flex-col">
+                <div className="rounded-xl bg-gradient-to-br from-emerald-500/20 to-emerald-600/10 border border-emerald-500/20 p-4 flex flex-col min-w-0">
                   <span className="text-xs text-emerald-300/70 font-medium">Interest Rate</span>
-                  <span className="text-xl font-bold text-emerald-300 mt-1">{calculated.rate}%</span>
+                  <span className="text-xl font-bold text-emerald-300 mt-1 truncate">{calculated.rate}%</span>
                 </div>
-                <div className="rounded-xl bg-gradient-to-br from-amber-500/20 to-amber-600/10 border border-amber-500/20 p-4 flex flex-col">
+                <div className="rounded-xl bg-gradient-to-br from-amber-500/20 to-amber-600/10 border border-amber-500/20 p-4 flex flex-col min-w-0">
                   <span className="text-xs text-amber-300/70 font-medium">Total Interest</span>
-                  <span className="text-xl font-bold text-amber-300 mt-1">{formatCurrency(calculated.interest)}</span>
+                  <span className="text-xl font-bold text-amber-300 mt-1 truncate">{formatCurrency(calculated.interest)}</span>
                 </div>
-                <div className="rounded-xl bg-gradient-to-br from-blue-500/20 to-blue-600/10 border border-blue-500/20 p-4 flex flex-col">
+                <div className="rounded-xl bg-gradient-to-br from-blue-500/20 to-blue-600/10 border border-blue-500/20 p-4 flex flex-col min-w-0">
                   <span className="text-xs text-blue-300/70 font-medium">Total Repayment</span>
-                  <span className="text-xl font-bold text-blue-300 mt-1">{formatCurrency(calculated.totalRepayment)}</span>
+                  <span className="text-xl font-bold text-blue-300 mt-1 truncate">{formatCurrency(calculated.totalRepayment)}</span>
                 </div>
-                <div className="rounded-xl bg-gradient-to-br from-violet-500/20 to-violet-600/10 border border-violet-500/20 p-4 flex flex-col">
+                <div className="rounded-xl bg-gradient-to-br from-violet-500/20 to-violet-600/10 border border-violet-500/20 p-4 flex flex-col min-w-0">
                   <span className="text-xs text-violet-300/70 font-medium">Monthly Payment</span>
-                  <span className="text-xl font-bold text-violet-300 mt-1">{formatCurrency(calculated.monthlyPayment)}</span>
+                  <span className="text-xl font-bold text-violet-300 mt-1 truncate">{formatCurrency(calculated.monthlyPayment)}</span>
                 </div>
               </div>
 
