@@ -11,6 +11,11 @@ import {
   getRepaymentRequests,
   markRepaymentReceived
 } from '../controller/adminController.js';
+import {
+  getAllTestimonials,
+  deleteTestimonial,
+  adminCreateTestimonial
+} from '../controller/testimonialController.js';
 
 const router = express.Router();
 
@@ -24,6 +29,11 @@ router.post('/deny-loan/:applicationId', denyLoan);
 router.post('/add-funds/:userId', addFunds);
 router.get('/repayment-requests', getRepaymentRequests);
 router.post('/repayment-received/:requestId', markRepaymentReceived);
+
+// Testimonial management
+router.get('/testimonials', getAllTestimonials);
+router.post('/testimonials', adminCreateTestimonial);
+router.delete('/testimonials/:id', deleteTestimonial);
 
 // Super admin only
 router.delete('/user/:userId', superAdmin, deleteUser);

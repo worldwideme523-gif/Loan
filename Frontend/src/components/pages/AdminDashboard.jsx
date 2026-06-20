@@ -15,25 +15,29 @@ import { AppSidebar } from '@/components/app-sidebar';
 import { SiteHeader } from '@/components/site-header';
 import { ChartBarGroup } from '@/components/chart-bar';
 import { ChartDonut } from '@/components/chart-pie';
-import { Users, FileText, DollarSign, CheckCircle, XCircle, Plus, Trash2, UserCog, Banknote, ClipboardList, TrendingUp, Activity, PieChart } from 'lucide-react';
+import { Users, FileText, DollarSign, CheckCircle, XCircle, Plus, Trash2, UserCog, Banknote, ClipboardList, TrendingUp, Activity, PieChart, MessageSquareQuote, Star } from 'lucide-react';
 
 const AdminDashboard = () => {
   const { user, logout, isSuperAdmin } = useAuth();
   const [users, setUsers] = useState([]);
   const [applications, setApplications] = useState([]);
   const [repayments, setRepayments] = useState([]);
+  const [testimonials, setTestimonials] = useState([]);
   const [selectedTab, setSelectedTab] = useState('users');
   const [message, setMessage] = useState('');
   const [addFundsTarget, setAddFundsTarget] = useState(null);
   const [addFundsAmount, setAddFundsAmount] = useState('');
   const [newAdmin, setNewAdmin] = useState({ name: '', email: '', password: '', role: 'admin' });
+  const [newTestimonial, setNewTestimonial] = useState({ author: '', content: '', rating: 5, loanAmount: '' });
   const [addFundsOpen, setAddFundsOpen] = useState(false);
   const [createAdminOpen, setCreateAdminOpen] = useState(false);
+  const [createTestimonialOpen, setCreateTestimonialOpen] = useState(false);
 
   useEffect(() => {
     fetchUsers();
     fetchApplications();
     fetchRepayments();
+    fetchTestimonials();
   }, []);
 
   const fetchUsers = async () => {
@@ -55,6 +59,33 @@ const AdminDashboard = () => {
       const res = await axiosInstance.get('/api/admin/repayment-requests');
       setRepayments(res.data);
     } catch (err) { console.error(err); }
+  };
+
+  const fetchTestimonials = async () => {
+    try {
+      const res = await axiosInstance.get('/api/admin/testimonials');
+      setTestimonials(res.data);
+    } catch (err) { console.error(err); }
+  };
+
+  const handleDeleteTestimonial = async (id) => {
+    if (!window.confirm('Delete this testimonial?')) return;
+    try {
+      await axiosInstance.delete(`/api/admin/testimonials/${id}`);
+      setMessage('Testimonial deleted');
+      fetchTestimonials();
+    } catch (err) { setMessage(err.response?.data?.message || 'Delete failed'); }
+  };
+
+  const handleCreateTestimonial = async () => {
+    if (!newTestimonial.author || !newTestimonial.content) return;
+    try {
+      await axiosInstance.post('/api/admin/testimonials', newTestimonial);
+      setMessage('Testimonial created');
+      setCreateTestimonialOpen(false);
+      setNewTestimonial({ author: '', content: '', rating: 5, loanAmount: '' });
+      fetchTestimonials();
+    } catch (err) { setMessage(err.response?.data?.message || 'Create failed'); }
   };
 
   const handleApproveLoan = async (appId) => {
@@ -136,6 +167,7 @@ const AdminDashboard = () => {
     { id: 'users', label: 'Users', icon: Users, count: users.length },
     { id: 'applications', label: 'Loan Apps', icon: FileText, count: pendingApps },
     { id: 'repayments', label: 'Repayments', icon: DollarSign, count: pendingRepays },
+    { id: 'testimonials', label: 'Testimonials', icon: MessageSquareQuote, count: testimonials.length },
   ];
   if (isSuperAdmin) {
     navItems.push({ id: 'admins', label: 'Manage Admins', icon: UserCog });
@@ -425,6 +457,105 @@ const AdminDashboard = () => {
                             <TableCell className="px-4 md:px-6 py-3 text-right">
                               <Button size="sm" variant="ghost" className="h-8 px-2 text-xs text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50" onClick={() => handleMarkRepaymentReceived(req._id)}>
                                 <CheckCircle className="mr-1 size-3.5" /> Mark Received
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      )}
+                    </TableBody>
+                  </Table>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {selectedTab === 'testimonials' && (
+            <Card className="shadow-sm border-0 ring-1 ring-foreground/5">
+              <div className="h-1 bg-gradient-to-r from-blue-500 to-purple-500" />
+              <CardHeader className="p-4 md:p-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <div>
+                    <CardTitle className="text-lg md:text-xl">Testimonial Management</CardTitle>
+                    <CardDescription className="text-sm">View, create, and manage client testimonials</CardDescription>
+                  </div>
+                  <Dialog open={createTestimonialOpen} onOpenChange={setCreateTestimonialOpen}>
+                    <DialogTrigger asChild>
+                      <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0">
+                        <Plus className="mr-2 size-4" /> Add Testimonial
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Create Testimonial</DialogTitle>
+                        <DialogDescription>Add a new client testimonial manually.</DialogDescription>
+                      </DialogHeader>
+                      <div className="grid gap-4 py-4">
+                        <div className="grid gap-2">
+                          <Label htmlFor="tAuthor">Author Name</Label>
+                          <Input id="tAuthor" placeholder="Client name" value={newTestimonial.author} onChange={e => setNewTestimonial({...newTestimonial, author: e.target.value})} />
+                        </div>
+                        <div className="grid gap-2">
+                          <Label htmlFor="tContent">Testimonial</Label>
+                          <textarea
+                            id="tContent"
+                            className="flex min-h-[80px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                            placeholder="What the client said..."
+                            value={newTestimonial.content}
+                            onChange={e => setNewTestimonial({...newTestimonial, content: e.target.value})}
+                          />
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="grid gap-2">
+                            <Label htmlFor="tRating">Rating (1-5)</Label>
+                            <Input id="tRating" type="number" min={1} max={5} value={newTestimonial.rating} onChange={e => setNewTestimonial({...newTestimonial, rating: Number(e.target.value)})} />
+                          </div>
+                          <div className="grid gap-2">
+                            <Label htmlFor="tLoan">Loan Amount ($)</Label>
+                            <Input id="tLoan" type="number" placeholder="0" value={newTestimonial.loanAmount} onChange={e => setNewTestimonial({...newTestimonial, loanAmount: e.target.value})} />
+                          </div>
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <Button variant="outline" onClick={() => setCreateTestimonialOpen(false)}>Cancel</Button>
+                        <Button onClick={handleCreateTestimonial} className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0">Create</Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+              </CardHeader>
+              <CardContent className="p-0 md:p-0">
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="border-t md:border-t-0">
+                        <TableHead className="px-4 md:px-6 py-3">Author</TableHead>
+                        <TableHead className="px-4 md:px-6 py-3 max-w-md">Content</TableHead>
+                        <TableHead className="px-4 md:px-6 py-3 text-center">Rating</TableHead>
+                        <TableHead className="px-4 md:px-6 py-3 text-right hidden sm:table-cell">Loan</TableHead>
+                        <TableHead className="px-4 md:px-6 py-3 text-right">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {testimonials.length === 0 ? (
+                        <TableRow>
+                          <TableCell colSpan={5} className="text-center text-muted-foreground py-12">No testimonials found</TableCell>
+                        </TableRow>
+                      ) : (
+                        testimonials.map(t => (
+                          <TableRow key={t._id} className="hover:bg-muted/50 transition-colors">
+                            <TableCell className="px-4 md:px-6 py-3 font-medium">{t.author}</TableCell>
+                            <TableCell className="px-4 md:px-6 py-3 text-sm text-muted-foreground max-w-md truncate">{t.content}</TableCell>
+                            <TableCell className="px-4 md:px-6 py-3 text-center">
+                              <div className="flex items-center justify-center gap-0.5">
+                                {[1,2,3,4,5].map(s => (
+                                  <Star key={s} className={`size-3 ${s <= t.rating ? 'text-amber-400 fill-amber-400' : 'text-gray-200'}`} />
+                                ))}
+                              </div>
+                            </TableCell>
+                            <TableCell className="px-4 md:px-6 py-3 text-right text-sm hidden sm:table-cell">${t.loanAmount?.toLocaleString()}</TableCell>
+                            <TableCell className="px-4 md:px-6 py-3 text-right">
+                              <Button size="sm" variant="ghost" className="h-8 px-2 text-xs text-destructive hover:text-destructive" onClick={() => handleDeleteTestimonial(t._id)}>
+                                <Trash2 className="size-3.5" />
                               </Button>
                             </TableCell>
                           </TableRow>

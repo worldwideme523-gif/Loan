@@ -85,3 +85,53 @@ export const userCreateTestimonial = async (req, res) => {
     res.status(500).json({ message: 'Error creating testimonial' });
   }
 };
+
+// @desc    Get all testimonials (admin - includes inactive)
+// @route   GET /api/admin/testimonials
+export const getAllTestimonials = async (req, res) => {
+  try {
+    const testimonials = await Testimonial.find().sort({ createdAt: -1 }).lean();
+    res.status(200).json(testimonials);
+  } catch (error) {
+    console.error('Error fetching all testimonials:', error);
+    res.status(500).json({ message: 'Error fetching testimonials' });
+  }
+};
+
+// @desc    Delete a testimonial (admin)
+// @route   DELETE /api/admin/testimonials/:id
+export const deleteTestimonial = async (req, res) => {
+  try {
+    const testimonial = await Testimonial.findByIdAndDelete(req.params.id);
+    if (!testimonial) {
+      return res.status(404).json({ message: 'Testimonial not found' });
+    }
+    res.status(200).json({ message: 'Testimonial deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting testimonial:', error);
+    res.status(500).json({ message: 'Error deleting testimonial' });
+  }
+};
+
+// @desc    Create a testimonial (admin)
+// @route   POST /api/admin/testimonials
+export const adminCreateTestimonial = async (req, res) => {
+  try {
+    const { author, content, rating, loanAmount } = req.body;
+    if (!author || !content) {
+      return res.status(400).json({ message: 'Author and content are required' });
+    }
+    const testimonial = new Testimonial({
+      author: author.trim(),
+      content: content.trim(),
+      rating: Math.min(Math.max(rating || 5, 1), 5),
+      loanAmount: loanAmount ? parseInt(loanAmount) : 0,
+      isActive: true
+    });
+    await testimonial.save();
+    res.status(201).json(testimonial);
+  } catch (error) {
+    console.error('Error creating testimonial:', error);
+    res.status(500).json({ message: 'Error creating testimonial' });
+  }
+};
