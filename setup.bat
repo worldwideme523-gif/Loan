@@ -1,11 +1,11 @@
 @echo off
-REM LoanCrypto Platform - Setup Script for Windows
+REM FoyerLibre Platform - Setup Script for Windows
 REM This script helps set up and test the project
 
 setlocal enabledelayedexpansion
 
 echo ======================================
-echo LoanCrypto Platform - Setup Script
+echo FoyerLibre Platform - Setup Script
 echo ======================================
 echo.
 
@@ -26,7 +26,7 @@ if not exist "Frontend" (
 cls
 echo.
 echo ======================================
-echo LoanCrypto Platform - Setup Menu
+echo FoyerLibre Platform - Setup Menu
 echo ======================================
 echo.
 echo Select an action:

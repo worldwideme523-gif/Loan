@@ -38,9 +38,9 @@ const Login = () => {
           <div className="flex items-center justify-between h-16 sm:h-20">
             <Link to="/" className="flex items-center gap-3 group">
               <div className="size-9 sm:size-10 bg-white rounded-full flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow">
-                <span className="text-blue-600 font-bold text-lg sm:text-xl">V</span>
+                <span className="text-blue-600 font-bold text-base sm:text-lg">FL</span>
               </div>
-              <span className="text-xl sm:text-2xl font-bold text-white">Velaris</span>
+              <span className="text-xl sm:text-2xl font-bold text-white">FoyerLibre</span>
             </Link>
             <Link
               to="/"
@@ -61,10 +61,10 @@ const Login = () => {
             {/* Brand */}
             <div className="text-center mb-8">
               <div className="size-16 sm:size-20 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg rotate-3 hover:rotate-0 transition-transform duration-300">
-                <span className="text-white font-bold text-2xl sm:text-3xl">V</span>
+                <span className="text-white font-bold text-xl sm:text-2xl">FL</span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Welcome Back</h1>
-              <p className="text-gray-500 mt-1.5 text-sm sm:text-base">Sign in to your Velaris account</p>
+              <p className="text-gray-500 mt-1.5 text-sm sm:text-base">Sign in to your FoyerLibre account</p>
             </div>
 
             {error && (
@@ -145,7 +145,7 @@ const Login = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-left">
             <p className="text-white/60 text-xs sm:text-sm">
-              &copy; 2026 Velaris. All rights reserved.
+              &copy; 2026 FoyerLibre. All rights reserved.
             </p>
             <p className="text-white/40 text-xs">
               Secure &bull; Transparent &bull; Fast

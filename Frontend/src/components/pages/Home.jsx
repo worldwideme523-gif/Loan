@@ -98,9 +98,9 @@ const Home = () => {
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center shadow-md">
-                <span className="text-white font-bold text-lg">S</span>
+                <span className="text-white font-bold text-sm">FL</span>
               </div>
-              <div className="text-3xl font-bold text-blue-600">Velaris</div>
+              <div className="text-3xl font-bold text-blue-600">FoyerLibre</div>
             </div>
             <div className="flex items-center gap-4">
               <Link to="/login" className="text-gray-600 hover:text-blue-600 transition">
@@ -321,7 +321,7 @@ const Home = () => {
             </div>
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">What Our Clients Say</h2>
             <p className="text-lg text-center text-gray-500 max-w-2xl mx-auto">
-              Hear from our valued clients about their experience with Velaris.
+              Hear from our valued clients about their experience with FoyerLibre.
             </p>
           </motion.div>
 
@@ -395,7 +395,7 @@ const Home = () => {
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-10">
         <div className="container mx-auto px-6 text-center">
-          <p>&copy; 2026 Velaris. All rights reserved.</p>
+          <p>&copy; 2026 FoyerLibre. All rights reserved.</p>
           <p className="text-sm text-gray-400 mt-2">Built for financial freedom. Secure, transparent, fast.</p>
         </div>
       </footer>

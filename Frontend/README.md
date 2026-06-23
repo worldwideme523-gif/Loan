@@ -1,4 +1,4 @@
-# LoanCrypto Frontend
+# FoyerLibre Frontend
 
 A modern React application for a cryptocurrency lending platform built with Vite, React Router, TailwindCSS, and Axios.
 

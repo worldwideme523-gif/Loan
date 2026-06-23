@@ -1,4 +1,4 @@
-# LoanCrypto Platform - Frontend & Backend Integration Guide
+# FoyerLibre Platform - Frontend & Backend Integration Guide
 
 ## ✅ Fixed Issues
 

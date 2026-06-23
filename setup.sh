@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# LoanCrypto Platform - Setup Script
+# FoyerLibre Platform - Setup Script
 # This script helps set up and test the project
 
 echo "======================================"
-echo "LoanCrypto Platform - Setup Script"
+echo "FoyerLibre Platform - Setup Script"
 echo "======================================"
 echo ""
 

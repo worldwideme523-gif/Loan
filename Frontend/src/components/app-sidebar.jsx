@@ -25,11 +25,11 @@ export function AppSidebar({ items, user, role, activeTab, onNavigate, onLogout,
       <SidebarHeader className="border-b border-slate-700/50 p-4 group-data-[collapsible=icon]:p-2">
         <div className="flex items-center gap-3">
           <div className="flex size-9 group-data-[collapsible=icon]:size-8 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-500 to-teal-500 shadow-lg shadow-emerald-500/20">
-            <span className="text-sm group-data-[collapsible=icon]:text-xs font-bold text-white">S</span>
+            <span className="text-[10px] group-data-[collapsible=icon]:text-[9px] font-bold text-white">FL</span>
           </div>
           <div className="min-w-0 group-data-[collapsible=icon]:hidden">
-            <p className="text-sm font-semibold text-white truncate">Velaris</p>
-            <p className="text-[11px] text-slate-400 truncate leading-tight">Loan Platform</p>
+            <p className="text-sm font-semibold text-white truncate">FoyerLibre</p>
+            <p className="text-[11px] text-slate-400 truncate leading-tight">FoyerLibre</p>
           </div>
         </div>
       </SidebarHeader>

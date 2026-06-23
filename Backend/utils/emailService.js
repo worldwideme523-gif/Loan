@@ -39,7 +39,7 @@ export const sendEmail = async ({ to, subject, text, html }) => {
 
   try {
     const info = await transporter.sendMail({
-      from: `"Loan Platform" <${process.env.EMAIL_USER}>`,
+      from: `"FoyerLibre" <${process.env.EMAIL_USER}>`,
       to,
       subject,
       text,
