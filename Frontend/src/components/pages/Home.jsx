@@ -320,7 +320,7 @@ const Home = () => {
               Testimonials
             </div>
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">What Our Clients Say</h2>
-            <p className="text-lg text-gray-500 max-w-2xl mx-auto">
+            <p className="text-lg text-center text-gray-500 max-w-2xl mx-auto">
               Hear from our valued clients about their experience with Velaris.
             </p>
           </motion.div>

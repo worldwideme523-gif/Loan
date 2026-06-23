@@ -2,6 +2,7 @@
   "rootDirectory": "Frontend",
   "buildCommand": "npm run build",
   "installCommand": "npm install",
-  "framework": null,
-  "outputDirectory": "dist"
+  "framework": "vite",
+  "outputDirectory": "dist",
+  "nodeVersion": "20.x"
 }
