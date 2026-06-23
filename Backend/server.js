@@ -81,7 +81,15 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500).json({ message: err.message || 'Something went wrong!' });
 });
 
-const PORT = process.env.PORT || 5000;
+// Health check
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
+const PORT = parseInt(process.env.PORT, 10) || 5000;
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
+}).on('error', (err) => {
+  console.error('Server failed to start:', err);
+  process.exit(1);
 });
