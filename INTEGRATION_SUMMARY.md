@@ -364,7 +364,7 @@ VITE_CRYPTO_REPAYMENT_ADDRESS=0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb9
 ### Short-term (Week 1)
 1. Test full loan application flow
 2. Test admin dashboard functionality
-3. Verify email notifications (nodemailer)
+3. Verify email notifications (Resend)
 4. Test repayment request workflow
 
 ### Medium-term (Week 2-3)

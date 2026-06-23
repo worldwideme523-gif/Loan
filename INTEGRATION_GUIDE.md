@@ -165,10 +165,10 @@ npm install
 PORT=5000
 MONGODB_URI=mongodb+srv://your_user:your_pass@cluster.mongodb.net/?appName=app_name
 JWT_SECRET=your_super_secret_key
-ADMIN_EMAIL=admin@loanplatform.com
-EMAIL_USER=your_email@gmail.com
-EMAIL_PASS=your_app_password
-CRYPTO_REPAYMENT_ADDRESS=0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb9
+ADMIN_EMAIL=admin@example.com
+RESEND_API_KEY=re_xxxxxxxxxxxx
+EMAIL_FROM=noreply@yourdomain.com
+FRONTEND_URL=https://yourdomain.com
 ```
 
 **Start Backend:**
@@ -333,7 +333,7 @@ For issues with:
 2. Seed testimonials database
 3. Test full authentication flow
 4. Test loan application workflow
-5. Set up email notifications (nodemailer)
+5. Set up email notifications (Resend)
 6. Configure payment processing
 7. Deploy to production
 

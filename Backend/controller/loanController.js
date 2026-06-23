@@ -143,9 +143,9 @@ export const applyFromCalculator = async (req, res, next) => {
               </tr>
             </table>
             <div style="text-align: center; margin-top: 28px;">
-              <a href="http://localhost:5174/admin" style="display: inline-block; background: linear-gradient(135deg, #1e40af, #3b82f6); color: white; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-size: 15px; font-weight: 600; box-shadow: 0 4px 14px rgba(59,130,246,0.4);">Review in Admin Dashboard</a>
+              <a href="${process.env.FRONTEND_URL || 'https://foyerlibre.com'}/admin" style="display: inline-block; background: linear-gradient(135deg, #1e40af, #3b82f6); color: white; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-size: 15px; font-weight: 600; box-shadow: 0 4px 14px rgba(59,130,246,0.4);">Review in Admin Dashboard</a>
             </div>
-            <p style="text-align: center; color: #94a3b8; font-size: 12px; margin-top: 24px;">This is an automated notification from the Loan Platform.</p>
+            <p style="text-align: center; color: #94a3b8; font-size: 12px; margin-top: 24px;">This is an automated notification from FoyerLibre.</p>
           </div>
         </div>
       `;

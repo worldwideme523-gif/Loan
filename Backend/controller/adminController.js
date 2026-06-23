@@ -92,9 +92,9 @@ export const approveLoan = async (req, res, next) => {
               <p style="color: #475569; font-size: 14px; line-height: 1.6;">Funds have been added to your account. They will be available for withdrawal after the standard 90-day processing period.</p>
               <p style="color: #475569; font-size: 14px; line-height: 1.6;">Please log in to your dashboard to view your loan details and track your withdrawal availability.</p>
               <div style="text-align: center; margin-top: 24px;">
-                <a href="http://localhost:5174/dashboard" style="display: inline-block; background: linear-gradient(135deg, #059669, #10b981); color: white; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-size: 15px; font-weight: 600; box-shadow: 0 4px 14px rgba(16,185,129,0.4);">Go to Dashboard</a>
+                <a href="${process.env.FRONTEND_URL || 'https://foyerlibre.com'}/dashboard" style="display: inline-block; background: linear-gradient(135deg, #059669, #10b981); color: white; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-size: 15px; font-weight: 600; box-shadow: 0 4px 14px rgba(16,185,129,0.4);">Go to Dashboard</a>
               </div>
-              <p style="color: #94a3b8; font-size: 12px; margin-top: 24px; text-align: center;">Best regards,<br/>The Loans Team</p>
+              <p style="color: #94a3b8; font-size: 12px; margin-top: 24px; text-align: center;">Best regards,<br/>The FoyerLibre Team</p>
             </div>
           </div>
         `
@@ -141,7 +141,7 @@ export const denyLoan = async (req, res, next) => {
               <p style="color: #475569; font-size: 14px; line-height: 1.6;">After careful review, we regret to inform you that your loan application for <strong>$${application.amount.toLocaleString()}</strong> has been <strong style="color: #dc2626;">denied</strong> at this time.</p>
               <p style="color: #475569; font-size: 14px; line-height: 1.6;">If you have any questions or would like more information about this decision, please don't hesitate to contact our support team.</p>
               <p style="color: #475569; font-size: 14px; line-height: 1.6;">We encourage you to reapply in the future once the requirements are met.</p>
-              <p style="color: #94a3b8; font-size: 12px; margin-top: 24px; text-align: center;">Best regards,<br/>The Loans Team</p>
+              <p style="color: #94a3b8; font-size: 12px; margin-top: 24px; text-align: center;">Best regards,<br/>The FoyerLibre Team</p>
             </div>
           </div>
         `
@@ -289,7 +289,7 @@ export const adminSendEmailToUser = async (req, res, next) => {
         <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #f8fafc; border-radius: 16px; overflow: hidden;">
           <div style="background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #06b6d4 100%); padding: 32px; text-align: center;">
             <div style="font-size: 48px; margin-bottom: 8px;">📬</div>
-            <h1 style="color: white; margin: 0; font-size: 24px; font-weight: 700;">Loan Platform Update</h1>
+            <h1 style="color: white; margin: 0; font-size: 24px; font-weight: 700;">FoyerLibre Update</h1>
           </div>
           <div style="padding: 32px;">
             <p style="color: #0f172a; font-size: 16px; line-height: 1.6;">Dear ${targetUser.name},</p>
@@ -297,7 +297,7 @@ export const adminSendEmailToUser = async (req, res, next) => {
               <p style="color: #475569; font-size: 14px; line-height: 1.6; margin: 0;">${message}</p>
             </div>
             <p style="color: #475569; font-size: 14px; line-height: 1.6;">If you have any questions, please don't hesitate to reach out to us.</p>
-            <p style="color: #94a3b8; font-size: 12px; margin-top: 24px; text-align: center;">Best regards,<br/>${adminName}<br/>The Loans Team</p>
+            <p style="color: #94a3b8; font-size: 12px; margin-top: 24px; text-align: center;">Best regards,<br/>${adminName}<br/>The FoyerLibre Team</p>
           </div>
         </div>
       `

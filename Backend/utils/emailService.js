@@ -1,55 +1,34 @@
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 
-let transporter = null;
+const resend = new Resend(process.env.RESEND_API_KEY);
 
-const getTransporter = () => {
-  // If already created, return it
-  if (transporter) return transporter;
-
-  // Check if email credentials are configured
-  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-    console.warn('⚠️ Email credentials missing. Emails will not be sent.');
-    return null;
-  }
-
-  try {
-    transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
-    return transporter;
-  } catch (error) {
-    console.error('Failed to create email transporter:', error);
-    return null;
-  }
-};
+const FROM_EMAIL = process.env.EMAIL_FROM || 'noreply@foyerlibre.com';
+const FROM_NAME = 'FoyerLibre';
 
 export const sendEmail = async ({ to, subject, text, html }) => {
-  const transporter = getTransporter();
-  
-  // If no transporter (missing credentials or creation failed), just log and return
-  if (!transporter) {
+  if (!process.env.RESEND_API_KEY) {
     console.log(`📧 Email would be sent to ${to} with subject "${subject}"`);
-    console.log(`   Content: ${text?.substring(0, 100)}...`);
-    return { message: 'Email not sent (no credentials), but operation continues' };
+    console.log(`   Content: ${text?.substring(0, 100) || ''}...`);
+    return { message: 'Email not sent (no RESEND_API_KEY), but operation continues' };
   }
 
   try {
-    const info = await transporter.sendMail({
-      from: `"FoyerLibre" <${process.env.EMAIL_USER}>`,
-      to,
+    const { data, error } = await resend.emails.send({
+      from: `${FROM_NAME} <${FROM_EMAIL}>`,
+      to: Array.isArray(to) ? to : [to],
       subject,
-      text,
       html: html || text?.replace(/\n/g, '<br>'),
     });
-    console.log(`✅ Email sent to ${to} - Message ID: ${info.messageId}`);
-    return info;
+
+    if (error) {
+      console.error(`❌ Failed to send email to ${to}:`, error.message);
+      return { error: error.message };
+    }
+
+    console.log(`✅ Email sent to ${to} - ID: ${data?.id}`);
+    return data;
   } catch (error) {
     console.error(`❌ Failed to send email to ${to}:`, error.message);
-    // Do NOT throw error – just log and return gracefully
     return { error: error.message };
   }
 };

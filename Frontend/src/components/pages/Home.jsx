@@ -320,9 +320,9 @@ const Home = () => {
               Testimonials
             </div>
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">What Our Clients Say</h2>
-            <p className="text-lg text-center text-gray-500 max-w-2xl mx-auto">
+            <div className="text-lg text-gray-600 max-w-xl mx-auto leading-relaxed text-center">
               Hear from our valued clients about their experience with FoyerLibre.
-            </p>
+            </div>
           </motion.div>
 
           {loadingTestimonials ? (
@@ -392,6 +392,113 @@ const Home = () => {
           )}
         </div>
       </motion.section>
+      {/* Contact Section */}
+      <section className="py-20 bg-white">
+        <div className="container mx-auto px-6 max-w-3xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="text-center mb-12"
+          >
+            <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-4 py-1.5 rounded-full text-sm font-medium mb-4">
+              <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+              Contact Us
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Get in Touch</h2>
+            <p className="text-lg text-gray-500 max-w-2xl mx-auto">
+              Have questions? We'd love to hear from you. Send us a message and we'll respond promptly.
+            </p>
+          </motion.div>
+
+          <motion.form
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            onSubmit={async (e) => {
+              e.preventDefault();
+              const form = e.target;
+              const btn = form.querySelector('button[type="submit"]');
+              const status = form.querySelector('.form-status');
+              btn.disabled = true;
+              btn.textContent = 'Sending...';
+              status.textContent = '';
+              try {
+                const res = await axiosInstance.post('/api/public/contact', {
+                  name: form.name.value,
+                  email: form.email.value,
+                  subject: form.subject.value,
+                  message: form.message.value,
+                });
+                status.textContent = res.data.message;
+                status.className = 'form-status text-green-600 text-sm mt-4 text-center';
+                form.reset();
+              } catch (err) {
+                status.textContent = err.response?.data?.message || 'Something went wrong. Please try again.';
+                status.className = 'form-status text-red-600 text-sm mt-4 text-center';
+              } finally {
+                btn.disabled = false;
+                btn.textContent = 'Send Message';
+              }
+            }}
+            className="space-y-5"
+          >
+            <div className="grid sm:grid-cols-2 gap-5">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">Your Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  required
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-3 focus:ring-blue-200 outline-none transition text-gray-900"
+                  placeholder="John Doe"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">Your Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  required
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-3 focus:ring-blue-200 outline-none transition text-gray-900"
+                  placeholder="john@example.com"
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">Subject (optional)</label>
+              <input
+                type="text"
+                name="subject"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-3 focus:ring-blue-200 outline-none transition text-gray-900"
+                placeholder="How can we help?"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">Message</label>
+              <textarea
+                name="message"
+                required
+                rows={4}
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-3 focus:ring-blue-200 outline-none transition text-gray-900 resize-none"
+                placeholder="Tell us more about your inquiry..."
+              />
+            </div>
+            <div className="text-center">
+              <button
+                type="submit"
+                className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white px-10 py-3.5 rounded-xl font-semibold shadow-lg hover:shadow-blue-500/30 transition-all duration-300 hover:scale-105 active:scale-100"
+              >
+                Send Message
+              </button>
+              <p className="form-status text-sm mt-4 text-center"></p>
+            </div>
+          </motion.form>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-10">
         <div className="container mx-auto px-6 text-center">

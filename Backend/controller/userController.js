@@ -35,7 +35,7 @@ export const contactAdmin = async (req, res, next) => {
 
     await sendEmail({
       to: process.env.ADMIN_EMAIL,
-      subject: `Loan Platform: ${subject}`,
+      subject: `FoyerLibre: ${subject}`,
       text: `From: ${user.name} (${user.email})\n\n${message}`
     });
 
