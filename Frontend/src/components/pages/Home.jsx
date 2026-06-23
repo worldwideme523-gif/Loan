@@ -97,8 +97,8 @@ const Home = () => {
         <div className="container mx-auto px-6 py-4">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center shadow-md">
-                <span className="text-white font-bold text-sm">FL</span>
+              <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center shadow-md ring-2 ring-blue-300">
+                <span className="text-white font-bold text-xs">FL</span>
               </div>
               <div className="text-3xl font-bold text-blue-600">FoyerLibre</div>
             </div>
