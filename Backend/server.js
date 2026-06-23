@@ -32,17 +32,18 @@ const __dirname = path.dirname(__filename);
 const app = express();
 
 // Middleware
-const allowedOrigins = [
-  'http://localhost:5174',
-  'https://loan-zeta-self.vercel.app',
-  'https://loan-o6dv519nw-ward-s-projects2.vercel.app'
-];
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (!origin) return callback(null, true);
+    const allowed = [
+      'http://localhost:5174',
+      'http://localhost:4173',
+      'https://loan-zeta-self.vercel.app'
+    ];
+    if (allowed.includes(origin) || origin.endsWith('.vercel.app')) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(null, true);
     }
   },
   credentials: true
